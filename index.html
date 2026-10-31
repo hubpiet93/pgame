@@ -44,6 +44,11 @@ h1{margin:6px 0 2px;font-size:28px}
 .info b{color:#fff}
 #playBar{position:sticky;bottom:0;background:#0b0d12;box-shadow:0 -10px 14px #0b0d12;padding:8px 0 max(10px,env(safe-area-inset-bottom));margin-top:8px;z-index:2}
 #play{width:100%;background:#2ecc71;color:#06210f;font-weight:800;font-size:24px;padding:14px;border-radius:14px}
+@media (max-height:520px){
+ #playBar{display:flex;align-items:center;gap:12px;padding:6px 0 max(6px,env(safe-area-inset-bottom));margin-top:4px;box-shadow:0 -6px 8px #0b0d12}
+ #playBar #poolInfo{margin:0;flex:0 0 auto;font-size:13px;max-width:30%}
+ #play{flex:1;padding:8px;font-size:19px;border-radius:10px}
+}
 #poolInfo{text-align:center;color:#9aa3b5;font-size:14px;margin-bottom:6px}
 
 /* odliczanie */
@@ -123,7 +128,7 @@ h1{margin:6px 0 2px;font-size:28px}
    <b>Przytrzymaj</b> palec na wybranej połowie ekranu, aż cała się wypełni kolorem. Puszczenie wcześniej anuluje.<br>
    <b>Faul</b> (słowo nie na P albo samo hasło): reszta krzyczy „faul!”, a zgadujący stuka pas. Pas i faul = 0 pkt.
   </div>
-  <div style="text-align:center;color:#556;font-size:12px;margin:14px 0 6px">wersja 2026-10-31 · układ 4</div>
+  <div style="text-align:center;color:#556;font-size:12px;margin:14px 0 6px">wersja 2026-10-31 · układ 5</div>
   <div id="playBar"><div id="poolInfo"></div><button id="play">Graj</button></div>
  </div>
 </div>
