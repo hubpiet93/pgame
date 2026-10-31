@@ -123,7 +123,7 @@ h1{margin:6px 0 2px;font-size:28px}
    <b>Przytrzymaj</b> palec na wybranej połowie ekranu, aż cała się wypełni kolorem. Puszczenie wcześniej anuluje.<br>
    <b>Faul</b> (słowo nie na P albo samo hasło): reszta krzyczy „faul!”, a zgadujący stuka pas. Pas i faul = 0 pkt.
   </div>
-  <div style="text-align:center;color:#556;font-size:12px;margin:14px 0 6px">wersja 2026-10-31 · układ 3</div>
+  <div style="text-align:center;color:#556;font-size:12px;margin:14px 0 6px">wersja 2026-10-31 · układ 4</div>
   <div id="playBar"><div id="poolInfo"></div><button id="play">Graj</button></div>
  </div>
 </div>
@@ -1491,14 +1491,15 @@ const HINTS = {"kot":"pazury · pręgowany",
 "komputer kwantowy":"przyszłość · potężny"};
 const LVL = {easy:"Łatwy",medium:"Średni",hard:"Trudny"};
 
-const DEF = {mode:"time",time:60,count:10,cats:[],hintEnd:false,hintWord:false,hintSec:30,lvl:"mixed",swap:false,sound:true};
+const DEF = {mode:"time",time:60,count:10,cats:[],hintEnd:false,hintWord:false,hintSec:30,hintEndSec:30,lvl:"mixed",swap:false,sound:true};
 const OPTS = [
  {k:"mode",l:"Tryb",o:[["time","Na czas"],["count","Na liczbę haseł"],["endless","Bez końca"]]},
  {k:"time",l:"Czas rundy",o:[[30,"30 s"],[60,"60 s"],[90,"90 s"],[120,"2 min"]],show:s=>s.mode==="time"},
  {k:"count",l:"Liczba haseł",o:[[5,"5"],[10,"10"],[15,"15"],[20,"20"]],show:s=>s.mode==="count"},
- {k:"hintEnd",l:"Podpowiedź na końcu rundy",hint:"W ostatnich 30 sekundach rundy pod hasłem pojawią się dwa słowa na P, które pomagają je zgadnąć.",show:s=>s.mode==="time",o:[[false,"wył."],[true,"ostatnie 30 s"]]},
- {k:"hintWord",l:"Podpowiedź po czasie na haśle",hint:"Gdy to samo hasło wisi na ekranie dłużej niż wybrany czas, pod nim pojawią się dwa słowa na P.",o:[[false,"wył."],[true,"wł."]]},
- {k:"hintSec",l:"Podpowiedź po (sekundach na haśle)",select:true,show:s=>s.hintWord,o:[30,40,50,60,70,80,90,100,110,120].map(n=>[n,n<60?n+" s":(n%60?Math.floor(n/60)+" min "+n%60+" s":(n/60)+" min")])},
+ {k:"hintEnd",l:"Podpowiedź na końcu rundy",hint:"Gdy do końca rundy zostanie mniej niż wybrany czas, pod hasłem pojawią się dwa słowa na P, które pomagają je zgadnąć.",show:s=>s.mode==="time",o:[[false,"wył."],[true,"wł."]]},
+ {k:"hintEndSec",l:"Podpowiedź na ile sekund przed końcem",select:true,show:s=>s.mode==="time"&&s.hintEnd,o:[30,40,50,60,70,80,90,100,110,120].map(n=>[n,n<60?n+" s":(n%60?Math.floor(n/60)+" min "+n%60+" s":(n/60)+" min")])},
+ {k:"hintWord",l:"Podpowiedź po czasie na haśle",hint:"Gdy to samo hasło wisi na ekranie dłużej niż wybrany czas, pod nim pojawią się dwa słowa na P.",show:s=>s.mode!=="time",o:[[false,"wył."],[true,"wł."]]},
+ {k:"hintSec",l:"Podpowiedź po (sekundach na haśle)",select:true,show:s=>s.mode!=="time"&&s.hintWord,o:[30,40,50,60,70,80,90,100,110,120].map(n=>[n,n<60?n+" s":(n%60?Math.floor(n/60)+" min "+n%60+" s":(n/60)+" min")])},
  {k:"cats",l:"Kategorie",multi:true,hint:"Możesz wybrać kilka naraz. „Wszystkie” = bez ograniczeń.",o:Object.keys(WORDS).map(c=>[c,c])},
  {k:"lvl",l:"Poziom trudności",o:[["easy","Łatwy"],["medium","Średni"],["hard","Trudny"],["mixed","Mieszany"]]},
  {k:"swap",adv:true,l:"Zamień strony",hint:"Domyślnie zgadujący stuka PRAWĄ ręką, gdy zgadł (to lewa połowa ekranu, bo telefon jest do niego odwrócony), a LEWĄ, gdy pasuje. Włącz to, jeśli zgadującemu wygodniej odwrotnie: prawa ręka = pas, lewa = zgadnięte.",o:[[false,"wył."],[true,"wł."]]},
@@ -1532,12 +1533,12 @@ function pool(){
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 
 /* ustawienia UI */
-const SEC_OF={mode:"game",time:"game",count:"game",cats:"words",lvl:"words",hintEnd:"hints",hintWord:"hints",hintSec:"hints",swap:"adv",sound:"adv"};
+const SEC_OF={mode:"game",time:"game",count:"game",cats:"words",lvl:"words",hintEnd:"hints",hintWord:"hints",hintSec:"hints",hintEndSec:"hints",swap:"adv",sound:"adv"};
 const LVL_L={easy:"łatwy",medium:"średni",hard:"trudny",mixed:"mieszany"};
 const SECS=[
  {id:"game",t:"Tryb gry",sum:s=>({time:"Na czas · "+(s.time>=120?"2 min":s.time+" s"),count:"Na liczbę haseł · "+s.count,endless:"Bez końca"})[s.mode]},
  {id:"words",t:"Hasła",sum:s=>(s.cats.length===0?"wszystkie kategorie":s.cats.length===1?s.cats[0]:s.cats.length+" kategorie")+" · "+LVL_L[s.lvl]},
- {id:"hints",t:"Podpowiedzi na P",sum:s=>{const a=[];if(s.mode==="time"&&s.hintEnd)a.push("ostatnie 30 s");if(s.hintWord)a.push("po "+s.hintSec+" s na haśle");return a.length?a.join(" · "):"wył."}},
+ {id:"hints",t:"Podpowiedzi na P",sum:s=>s.mode==="time"?(s.hintEnd?"ostatnie "+s.hintEndSec+" s":"wył."):(s.hintWord?"po "+s.hintSec+" s na haśle":"wył.")},
  {id:"adv",t:"Zaawansowane",sum:s=>"strony "+(s.swap?"zamienione":"domyślne")+" · dźwięk "+(s.sound?"wł.":"wył.")}
 ];
 const secOpen={game:true};
@@ -1694,7 +1695,7 @@ function showHint(){
  const el=$("hintBox");
  let ok=false;
  if(R&&R.cur&&!R.pausedAt){
-  ok=(S.mode==="time"&&S.hintEnd&&R.end-Date.now()<=30000)||(S.hintWord&&Date.now()-R.wordAt>=S.hintSec*1000);
+  ok=S.mode==="time"?(S.hintEnd&&R.end-Date.now()<=S.hintEndSec*1000):(S.hintWord&&Date.now()-R.wordAt>=S.hintSec*1000);
  }
  if(ok)el.textContent="💡 "+(HINTS[R.cur.w]||"");
  else el.textContent="";
