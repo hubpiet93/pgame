@@ -26,6 +26,12 @@ h1{margin:6px 0 2px;font-size:28px}
 .sub{color:#9aa3b5;margin:0 0 14px;font-size:14px}
 .group{margin:14px 0}
 .group label{display:block;font-size:13px;color:#9aa3b5;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
+#adv{margin:18px 0 4px;background:#141926;border-radius:12px;padding:0 14px}
+#adv summary{cursor:pointer;padding:14px 0;font-size:15px;color:#c4cada;list-style:none;display:flex;justify-content:space-between}
+#adv summary::-webkit-details-marker{display:none}
+#adv summary::after{content:"▾";transition:transform .2s}
+#adv[open] summary::after{transform:rotate(180deg)}
+#adv .group:last-child{margin-bottom:16px}
 .hint{font-size:13px;color:#8892a6;line-height:1.4;margin:-2px 0 8px}
 .seg{display:flex;flex-wrap:wrap;gap:6px}
 .seg button{background:#1a1f2b;padding:10px 14px;border-radius:10px;font-size:15px;border:2px solid transparent}
@@ -243,8 +249,8 @@ const OPTS = [
  {k:"count",l:"Liczba haseł",o:[[5,"5"],[10,"10"],[15,"15"],[20,"20"]],show:s=>s.mode==="count"},
  {k:"cats",l:"Kategorie",multi:true,hint:"Możesz wybrać kilka naraz. „Wszystkie” = bez ograniczeń.",o:Object.keys(WORDS).map(c=>[c,c])},
  {k:"lvl",l:"Poziom trudności",o:[["easy","Łatwy"],["medium","Średni"],["hard","Trudny"],["mixed","Mieszany"]]},
- {k:"swap",l:"Zamień strony",hint:"Domyślnie zgadujący stuka PRAWĄ ręką, gdy zgadł (to lewa połowa ekranu, bo telefon jest do niego odwrócony), a LEWĄ, gdy pasuje. Włącz to, jeśli zgadującemu wygodniej odwrotnie: prawa ręka = pas, lewa = zgadnięte.",o:[[false,"wył."],[true,"wł."]]},
- {k:"sound",l:"Dźwięki",o:[[true,"wł."],[false,"wył."]]}
+ {k:"swap",adv:true,l:"Zamień strony",hint:"Domyślnie zgadujący stuka PRAWĄ ręką, gdy zgadł (to lewa połowa ekranu, bo telefon jest do niego odwrócony), a LEWĄ, gdy pasuje. Włącz to, jeśli zgadującemu wygodniej odwrotnie: prawa ręka = pas, lewa = zgadnięte.",o:[[false,"wył."],[true,"wł."]]},
+ {k:"sound",adv:true,l:"Dźwięki",o:[[true,"wł."],[false,"wył."]]}
 ];
 
 const $=id=>document.getElementById(id);
@@ -273,8 +279,12 @@ function pool(){
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 
 /* ustawienia UI */
+let advOpen=false;
 function renderSettings(){
  const box=$("opts");box.innerHTML="";
+ const adv=document.createElement("details");adv.id="adv";adv.open=advOpen;
+ adv.innerHTML="<summary>Opcje zaawansowane</summary>";
+ adv.addEventListener("toggle",()=>{advOpen=adv.open});
  for(const o of OPTS){
   if(o.show&&!o.show(S))continue;
   const g=document.createElement("div");g.className="group";
@@ -303,8 +313,9 @@ function renderSettings(){
    b.onclick=()=>{S[o.k]=v;lsSet("pnp_settings",S);renderSettings()};
    seg.appendChild(b);
   }
-  g.appendChild(seg);box.appendChild(g);
+  g.appendChild(seg);(o.adv?adv:box).appendChild(g);
  }
+ box.appendChild(adv);
  const okSide=S.swap?"Lewa ręka zgadującego (prawa połowa ekranu)":"Prawa ręka zgadującego (lewa połowa ekranu)";
  const pasSide=S.swap?"Prawa ręka zgadującego (lewa połowa ekranu)":"Lewa ręka zgadującego (prawa połowa ekranu)";
  $("infoOk").textContent=okSide;$("infoPas").textContent=pasSide;
