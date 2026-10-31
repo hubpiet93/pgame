@@ -146,74 +146,74 @@ h1{margin:6px 0 2px;font-size:28px}
 <script>
 const WORDS = {
  "Zwierzęta": {
-  easy: ["kot","pies","koń","krowa","świnia","kura","ryba","żaba","mysz","słoń","lew","zebra","małpa","owca","kaczka","gołąb","żółw","królik","koza","gęś"],
-  medium: ["wiewiórka","jeż","żyrafa","krokodyl","pingwin","delfin","nietoperz","bocian","łabędź","kangur","papuga","tygrys","wilk","niedźwiedź","sowa","orzeł","rekin","wieloryb","foka","struś"],
-  hard: ["dziobak","aksolotl","mrówkojad","leniwiec","ryjówka","pancernik","kameleon","pustułka","ośmiornica","hipopotam","koliber","borsuk","łoś","jenot","surykatka","lemur","tapir","mors","nandu","szynszyla"]
+  easy: ["kot","pies","koń","krowa","świnia","kura","ryba","żaba","mysz","słoń","lew","zebra","małpa","owca","kaczka","gołąb","żółw","królik","koza","gęś","indyk","osioł","kogut","gil","wróbel","motyl","pszczoła","mrówka","pająk","ślimak"],
+  medium: ["wiewiórka","jeż","żyrafa","krokodyl","pingwin","delfin","nietoperz","bocian","łabędź","kangur","papuga","tygrys","wilk","niedźwiedź","sowa","orzeł","rekin","wieloryb","foka","struś","hiena","gepard","panda","koala","wydra","nosorożec","jaguar","pantera","puma","flaming"],
+  hard: ["dziobak","aksolotl","mrówkojad","leniwiec","ryjówka","pancernik","kameleon","pustułka","ośmiornica","hipopotam","koliber","borsuk","łoś","jenot","surykatka","lemur","tapir","mors","nandu","szynszyla","okapi","gnu","kapibara","narwal","manat","diabeł tasmański","ptasznik","skorpion","modliszka","żuk gnojarz"]
  },
  "Jedzenie": {
-  easy: ["chleb","masło","ser","jajko","mleko","jabłko","banan","zupa","pizza","ciastko","czekolada","frytki","kanapka","lody","kawa","herbata","sok","woda","pomidor","ziemniak"],
-  medium: ["pierogi","kotlet schabowy","naleśniki","bigos","żurek","szarlotka","makaron","ogórek kiszony","racuchy","gołąbki","sernik","kiełbasa","rosół","tosty","pączek","barszcz","kopytka","śledź","placki ziemniaczane","budyń"],
-  hard: ["tiramisu","ratatuj","gazpacho","karpaccio","fondue","risotto","bruschetta","guacamole","majeranek","kisiel","oscypek","tatar","pasztet","żurawina","sałatka jarzynowa","łosoś","polędwica","parmezan","pieczarki","pistacje"]
+  easy: ["chleb","masło","ser","jajko","mleko","jabłko","banan","zupa","pizza","ciastko","czekolada","frytki","kanapka","lody","kawa","herbata","sok","woda","pomidor","ziemniak","gruszka","śliwka","truskawki","arbuz","marchewka","cebula","kiełbaska","szynka","ryż","kasza"],
+  medium: ["pierogi","kotlet schabowy","naleśniki","bigos","żurek","szarlotka","makaron","ogórek kiszony","racuchy","gołąbki","sernik","kiełbasa","rosół","tosty","pączek","barszcz","kopytka","śledź","placki ziemniaczane","budyń","kluski śląskie","flaki","krokiety","zapiekanka","kebab","lasagne","spaghetti","tacos","jabłecznik","babka"],
+  hard: ["tiramisu","ratatuj","gazpacho","karpaccio","fondue","risotto","bruschetta","guacamole","majeranek","kisiel","oscypek","tatar","pasztet","żurawina","sałatka jarzynowa","łosoś","polędwica","parmezan","pieczarki","pistacje","ostrygi","kawior","szparagi","trufle","foie gras","ceviche","paella","hummus","falafel","kimchi"]
  },
  "Zawody": {
-  easy: ["lekarz","nauczyciel","policjant","kucharz","strażak","kierowca","fryzjer","listonosz","sprzedawca","pielęgniarka","rolnik","piekarz","malarz","dentysta","sekretarka","kelner","górnik","żołnierz","murarz","mechanik"],
-  medium: ["hydraulik","elektryk","księgowy","architekt","dziennikarz","weterynarz","stolarz","ratownik","tłumacz","programista","piłkarz","fotograf","aktor","pilot","prawnik","psycholog","stewardesa","ochroniarz","kurier","trener"],
-  hard: ["sommelier","notariusz","geodeta","kominiarz","kartograf","lutnik","rzeźbiarz","ornitolog","farmaceuta","żongler","iluzjonista","rzeczoznawca","syndyk","kamerdyner","grafik","prokurator","perfumiarz","pszczelarz","spawacz","projektant"]
+  easy: ["lekarz","nauczyciel","policjant","kucharz","strażak","kierowca","fryzjer","listonosz","sprzedawca","pielęgniarka","rolnik","piekarz","malarz","dentysta","sekretarka","kelner","górnik","żołnierz","murarz","mechanik","inżynier","prezydent","burmistrz","ksiądz","sędzia","szef kuchni","barman","sprzątaczka","krawcowa","szewc"],
+  medium: ["hydraulik","elektryk","księgowy","architekt","dziennikarz","weterynarz","stolarz","ratownik","tłumacz","programista","piłkarz","fotograf","aktor","pilot","prawnik","psycholog","stewardesa","ochroniarz","kurier","trener","akrobata","klaun","muzyk","piosenkarz","reżyser","scenarzysta","kaskader","model","redaktor","lektor"],
+  hard: ["sommelier","notariusz","geodeta","kominiarz","kartograf","lutnik","rzeźbiarz","ornitolog","farmaceuta","żongler","iluzjonista","rzeczoznawca","syndyk","kamerdyner","grafik","prokurator","perfumiarz","pszczelarz","spawacz","projektant","ekonomista","statystyk","genetyk","neurochirurg","toksykolog","patolog","hydrolog","meteorolog","sejsmolog","entomolog"]
  },
  "Przedmioty": {
-  easy: ["krzesło","stół","łóżko","lampa","telefon","kubek","talerz","klucz","zegarek","parasol","okulary","plecak","książka","telewizor","łyżka","widelec","nóż","poduszka","szafa","drzwi"],
-  medium: ["odkurzacz","suszarka do włosów","żelazko","lodówka","czajnik","ładowarka","gitara","rower","hulajnoga","szczoteczka do zębów","nożyczki","młotek","latarka","pralka","garnek","szczotka","kołdra","zasłona","wieszak","lustro"],
-  hard: ["klepsydra","zszywacz","śrubokręt","teleskop","mikroskop","kalejdoskop","gramofon","barometr","szpulka","wahadło","kałamarz","imadło","cyrkiel","lornetka","szpilka","korkociąg","otwieracz do puszek","wiertarka","kłódka","magnes"]
+  easy: ["krzesło","stół","łóżko","lampa","telefon","kubek","talerz","klucz","zegarek","parasol","okulary","plecak","książka","telewizor","łyżka","widelec","nóż","poduszka","szafa","drzwi","łyżeczka","miska","szklanka","butelka","torba","torebka","okno","dywan","ręcznik","mydło"],
+  medium: ["odkurzacz","suszarka do włosów","żelazko","lodówka","czajnik","ładowarka","gitara","rower","hulajnoga","szczoteczka do zębów","nożyczki","młotek","latarka","pralka","garnek","szczotka","kołdra","zasłona","wieszak","lustro","budzik","wentylator","grzejnik","mikser","toster","blender","mikrofalówka","zmywarka","suszarka","prostownica"],
+  hard: ["klepsydra","zszywacz","śrubokręt","teleskop","mikroskop","kalejdoskop","gramofon","barometr","szpulka","wahadło","kałamarz","imadło","cyrkiel","lornetka","szpilka","korkociąg","otwieracz do puszek","wiertarka","kłódka","magnes","sekstans","astrolabium","metronom","kamerton","stetoskop","termometr","pipeta","probówka","lutownica","szczypce"]
  },
  "Miejsca": {
-  easy: ["szkoła","dom","sklep","kościół","szpital","plaża","las","góry","park","kino","dworzec","lotnisko","basen","restauracja","zamek","wieś","miasto","ulica","rynek","więzienie"],
-  medium: ["biblioteka","cmentarz","muzeum","stacja benzynowa","pralnia","zoo","wesołe miasteczko","Zakopane","Kraków","Morze Bałtyckie","Tatry","Warszawa","port","Mazury","cyrk","stadion","łazienka","kuchnia","strych","piwnica"],
-  hard: ["obserwatorium","planetarium","katakumby","bunkier","latarnia morska","oranżeria","kopalnia","Antarktyda","Sahara","Wawel","Wieliczka","amfiteatr","klasztor","Kreml","pustynia","wulkan","jaskinia","delta","tundra","atol"]
+  easy: ["szkoła","dom","sklep","kościół","szpital","plaża","las","góry","park","kino","dworzec","lotnisko","basen","restauracja","zamek","wieś","miasto","ulica","rynek","więzienie","ogród","podwórko","boisko","sklep spożywczy","apteka","bank","poczta","urząd","hotel","kawiarnia"],
+  medium: ["biblioteka","cmentarz","muzeum","stacja benzynowa","pralnia","zoo","wesołe miasteczko","Zakopane","Kraków","Morze Bałtyckie","Tatry","Warszawa","port","Mazury","cyrk","stadion","łazienka","kuchnia","strych","piwnica","sąd","komisariat","remiza","areszt","kasyno","łaźnia","sauna","opera","filharmonia","galeria"],
+  hard: ["obserwatorium","planetarium","katakumby","bunkier","latarnia morska","oranżeria","kopalnia","Antarktyda","Sahara","Wawel","Wieliczka","amfiteatr","klasztor","Kreml","pustynia","wulkan","jaskinia","delta","tundra","atol","Koloseum","Akropol","Machu Picchu","Wielki Mur","Biały Dom","Statua Wolności","Big Ben","Wieża Eiffla","Sagrada Familia","Taj Mahal"]
  },
  "Sport i rozrywka": {
-  easy: ["piłka nożna","koszykówka","siatkówka","pływanie","bieganie","narty","jazda na rowerze","kino","teatr","koncert","taniec","karty","szachy","bilard","hokej","siłownia","planszówki","wędkowanie","grill","dyskoteka"],
-  medium: ["tenis","boks","łyżwiarstwo","skoki narciarskie","wspinaczka","karaoke","bowling","sztuki walki","joga","paintball","żeglarstwo","golf","szermierka","jazda konna","siatkówka plażowa","kolarstwo","gimnastyka","kajaki","narty biegowe","zapasy"],
-  hard: ["curling","biathlon","lacrosse","pięciobój","rugby","badminton","parkour","snowboard","windsurfing","kajakarstwo","esport","cyrk","stand-up","escape room","wioślarstwo","triathlon","rzut oszczepem","skok o tyczce","pływanie synchroniczne","polo"]
+  easy: ["piłka nożna","koszykówka","siatkówka","pływanie","bieganie","narty","jazda na rowerze","kino","teatr","koncert","taniec","karty","szachy","bilard","hokej","siłownia","planszówki","wędkowanie","grill","dyskoteka","skakanka","łyżwy","sanki","ślizgawka","zjeżdżalnia","huśtawka","skok w dal","dwa ognie","berek","zbijak"],
+  medium: ["tenis","boks","łyżwiarstwo","skoki narciarskie","wspinaczka","karaoke","bowling","sztuki walki","joga","paintball","żeglarstwo","golf","szermierka","jazda konna","siatkówka plażowa","kolarstwo","gimnastyka","kajaki","narty biegowe","zapasy","baseball","krykiet","hokej na lodzie","futbol amerykański","piłka wodna","nurkowanie","surfing","skateboarding","rolki","paralotnia"],
+  hard: ["curling","biathlon","lacrosse","pięciobój","rugby","badminton","parkour","snowboard","windsurfing","kajakarstwo","esport","cyrk","stand-up","escape room","wioślarstwo","triathlon","rzut oszczepem","skok o tyczce","pływanie synchroniczne","polo","dziesięciobój","siedmiobój","wyścigi konne","skoki przez przeszkody","ujeżdżanie","skeleton","short track","narciarstwo dowolne","biegi na orientację","bouldering"]
  },
  "Ubrania": {
-  easy: ["koszula","spodnie","sukienka","buty","czapka","szalik","skarpetki","kurtka","bluza","rękawiczki","spódnica","sweter","dżinsy","krawat"],
-  medium: ["marynarka","szlafrok","kalosze","kombinezon","fartuch","piżama","kapelusz","szorty","trampki","kamizelka","płaszcz","pasek","klapki","bielizna"],
-  hard: ["gorset","kimono","toga","smoking","welon","kilt","beret","poncho","frak","turban","kożuch","mokasyny","kamasze","sombrero"]
+  easy: ["koszula","spodnie","sukienka","buty","czapka","szalik","skarpetki","kurtka","bluza","rękawiczki","spódnica","sweter","dżinsy","krawat","koszulka","podkoszulek","kapcie","adidasy","kozaki","sandały","krótkie spodenki","legginsy","bokserki","majtki","rajstopy","okulary przeciwsłoneczne","zegarek","biżuteria","kolczyki","naszyjnik"],
+  medium: ["marynarka","szlafrok","kalosze","kombinezon","fartuch","piżama","kapelusz","szorty","trampki","kamizelka","płaszcz","pasek","klapki","bielizna","trencz","parka","puchówka","polar","kardigan","tunika","bermudy","kąpielówki","bikini","strój kąpielowy","szal","apaszka","chusta","opaska","kominiarka","peleryna"],
+  hard: ["gorset","kimono","toga","smoking","welon","kilt","beret","poncho","frak","turban","kożuch","mokasyny","kamasze","sombrero","halka","krynolina","bolerko","żabot","kaftan","sari","hanbok","cylinder","melonik","fez","kefija","kipa","sutanna","habit","ornat","mitra"]
  },
  "Transport": {
-  easy: ["samochód","autobus","tramwaj","pociąg","samolot","rower","statek","motocykl","taksówka","karetka","ciężarówka","hulajnoga","metro","łódź"],
-  medium: ["helikopter","traktor","laweta","kolejka linowa","żaglówka","wóz strażacki","kajak","skuter","riksza","dźwig","koparka","balon","prom","autokar"],
-  hard: ["sterowiec","batyskaf","amfibia","dorożka","lokomotywa","szybowiec","katamaran","śmigłowiec","bryczka","drezyna","bobsleje","saneczki","trolejbus","zeppelin"]
+  easy: ["samochód","autobus","tramwaj","pociąg","samolot","rower","statek","motocykl","taksówka","karetka","ciężarówka","hulajnoga","metro","łódź","bus","wózek","rolki","deskorolka","quad","jeep","limuzyna","wywrotka","śmieciarka","radiowóz","parowóz","sanie","wózek inwalidzki","kolejka górska","lotniskowiec","tir"],
+  medium: ["helikopter","traktor","laweta","kolejka linowa","żaglówka","wóz strażacki","kajak","skuter","riksza","dźwig","koparka","balon","prom","autokar","betoniarka","walec drogowy","ciągnik siodłowy","kamper","przyczepa","łódź podwodna","okręt","kuter","jacht","motorówka","skuter wodny","ponton","gondola","lotnia","paralotnia","statek kosmiczny"],
+  hard: ["sterowiec","batyskaf","amfibia","dorożka","lokomotywa","szybowiec","katamaran","śmigłowiec","bryczka","drezyna","bobsleje","saneczki","trolejbus","zeppelin","wahadłowiec","sonda kosmiczna","łazik","czołg","transporter opancerzony","lektyka","palankin","powóz","kareta","diligencja","rydwan","tuk-tuk","monocykl","segway","hoverboard","szynobus"]
  },
  "Natura": {
-  easy: ["drzewo","kwiat","trawa","deszcz","śnieg","słońce","księżyc","gwiazda","chmura","rzeka","jezioro","morze","wiatr","tęcza"],
-  medium: ["burza","mgła","wodospad","błyskawica","grzyb","mech","szyszka","żołądź","kamień","piasek","lawina","wydma","lód","rosa"],
-  hard: ["tornado","huragan","zorza polarna","tsunami","ekosystem","fotosynteza","erozja","stalaktyt","gejzer","lodowiec","zaćmienie","kometa","mgławica","trzęsienie ziemi"]
+  easy: ["drzewo","kwiat","trawa","deszcz","śnieg","słońce","księżyc","gwiazda","chmura","rzeka","jezioro","morze","wiatr","tęcza","góra","wzgórze","dolina","pole","łąka","ocean","ogień","ziemia","powietrze","woda","kałuża","błoto","liść","gałąź","korzeń","krzew"],
+  medium: ["burza","mgła","wodospad","błyskawica","grzyb","mech","szyszka","żołądź","kamień","piasek","lawina","wydma","lód","rosa","skała","wąwóz","kanion","półwysep","wyspa","zatoka","fiord","mokradło","bagno","torfowisko","rafa koralowa","las deszczowy","sawanna","oaza","gleba","nasiona"],
+  hard: ["tornado","huragan","zorza polarna","tsunami","ekosystem","fotosynteza","erozja","stalaktyt","gejzer","lodowiec","zaćmienie","kometa","mgławica","trzęsienie ziemi","magma","lawa","krater","kaldera","erupcja","tektonika","kontynent","atmosfera","stratosfera","jonosfera","cyklon","monsun","pasat","efekt cieplarniany","ozon","biosfera"]
  },
  "Filmy i bajki": {
-  easy: ["Kopciuszek","Shrek","Batman","Spider-Man","Grinch","Smerfy","Kubuś Puchatek","Czerwony Kapturek","Królewna Śnieżka","Harry Potter","Elsa","Myszka Miki","Superman","Dzwoneczek"],
-  medium: ["Gandalf","Darth Vader","Wiedźmin","Jaś i Małgosia","Kot w butach","Rumcajs","Bolek i Lolek","Reksio","Gru","Simba","Jack Sparrow","Indiana Jones","Terminator","Titanic"],
-  hard: ["Matrix","Gladiator","Władca Pierścieni","Forrest Gump","Incepcja","Gwiezdne wojny","Seksmisja","Rejs","Vabank","Kler","Kingsajz","Znachor","Bogowie","Hobbit"]
+  easy: ["Kopciuszek","Shrek","Batman","Spider-Man","Grinch","Smerfy","Kubuś Puchatek","Czerwony Kapturek","Królewna Śnieżka","Harry Potter","Elsa","Myszka Miki","Superman","Dzwoneczek","Król Lew","Nemo","Toy Story","Auta","Minionki","Kraina Lodu","Aladyn","Mulan","Tarzan","Roszpunka","Mario","Bambi","Dumbo","Krecik","Hulk","Iron Man"],
+  medium: ["Gandalf","Darth Vader","Wiedźmin","Jaś i Małgosia","Kot w butach","Rumcajs","Bolek i Lolek","Reksio","Gru","Simba","Jack Sparrow","Indiana Jones","Terminator","Titanic","Chewbacca","Yoda","Thor","Kapitan Ameryka","Joker","Zygzak McQueen","Buzz Astral","Epoka lodowcowa","Madagaskar","Asterix","Obelix","Strażak Sam","Bob Budowniczy","Koziołek Matołek","Miś Uszatek","Smok Wawelski"],
+  hard: ["Matrix","Gladiator","Władca Pierścieni","Forrest Gump","Incepcja","Gwiezdne wojny","Seksmisja","Rejs","Vabank","Kler","Kingsajz","Znachor","Bogowie","Hobbit","Nietykalni","Leon zawodowiec","Skazani na Shawshank","Blade Runner","Mad Max","Truman Show","Lśnienie","Milczenie owiec","Dzień świstaka","Avatar","Diuna","Interstellar","Zielona mila","Lista Schindlera","Amelia","Szczęki"]
  },
  "Szkoła i nauka": {
-  easy: ["tablica","zeszyt","długopis","ołówek","gumka","linijka","plecak","lekcja","dzwonek","klasa","matematyka","historia","wuef","biologia"],
-  medium: ["sprawdzian","kartkówka","świadectwo","matura","dziennik","ściąga","wakacje","korepetycje","ławka","internat","chemia","geografia","fizyka","egzamin"],
-  hard: ["logarytm","ułamek","pierwiastek","hipoteza","laboratorium","doktorat","kolokwium","dziekanat","absolutorium","wykład","encyklopedia","semestr","stypendium","seminarium"]
+  easy: ["tablica","zeszyt","długopis","ołówek","gumka","linijka","plecak","lekcja","dzwonek","klasa","matematyka","historia","wuef","biologia","uczeń","dyrektor","przerwa","świetlica","stołówka","tornister","piórnik","kredki","farby","klej","kalendarz","ocena","jedynka","szóstka","uwaga","klasówka"],
+  medium: ["sprawdzian","kartkówka","świadectwo","matura","dziennik","ściąga","wakacje","korepetycje","ławka","internat","chemia","geografia","fizyka","egzamin","lektura","wypracowanie","referat","rozprawka","egzamin ósmoklasisty","wychowawca","samorząd uczniowski","zebranie","zwolnienie","wagary","dyżurny","szatnia","olimpiada","konkurs","indeks","studia"],
+  hard: ["logarytm","ułamek","pierwiastek","hipoteza","laboratorium","doktorat","kolokwium","dziekanat","absolutorium","wykład","encyklopedia","semestr","stypendium","seminarium","dysertacja","rozprawa doktorska","habilitacja","rektor","senat","konwersatorium","ćwiczenia","bibliografia","cytat","teza","antyteza","synteza","empiryzm","epistemologia","etymologia","gramatyka"]
  },
  "Święta i tradycje": {
-  easy: ["choinka","prezent","Wigilia","opłatek","bałwan","Wielkanoc","święconka","zajączek","urodziny","tort","świeczki","fajerwerki","sylwester","wesele"],
-  medium: ["karp","makowiec","kutia","śmigus-dyngus","Boże Ciało","Andrzejki","tłusty czwartek","dożynki","wianek","walentynki","Halloween","topienie Marzanny","orszak","chrzciny"],
-  hard: ["Zaduszki","Ramadan","Diwali","karnawał","kulig","jasełka","szopka","komunia","bierzmowanie","Nowy Rok","noc Kupały","sobótka","oczepiny","mikołajki"]
+  easy: ["choinka","prezent","Wigilia","opłatek","bałwan","Wielkanoc","święconka","zajączek","urodziny","tort","świeczki","fajerwerki","sylwester","wesele","Boże Narodzenie","kolędy","Mikołaj","renifer","anioł","gwiazdka","pierniczki","uszka","sianko","żłóbek","Dzień Matki","Dzień Ojca","Dzień Dziecka","Dzień Kobiet","Dzień Babci","imieniny"],
+  medium: ["karp","makowiec","kutia","śmigus-dyngus","Boże Ciało","Andrzejki","tłusty czwartek","dożynki","wianek","walentynki","Halloween","topienie Marzanny","orszak","chrzciny","Barbórka","Dzień Nauczyciela","gromnica","Środa Popielcowa","Wielki Post","Wielki Piątek","rezurekcja","Zielone Świątki","Noc Świętojańska","pasterka","kolędnicy","turoń","Dziady","przebierańcy","zabawa choinkowa","Trzech Króli"],
+  hard: ["Zaduszki","Ramadan","Diwali","karnawał","kulig","jasełka","szopka","komunia","bierzmowanie","Nowy Rok","noc Kupały","sobótka","oczepiny","mikołajki","Chanuka","Jom Kipur","Purim","Szawuot","Holi","Bajram","Dia de los Muertos","Thanksgiving","Oktoberfest","Karnawał w Rio","Nowy Rok chiński","Obon","Kwanzaa","Beltane","Samhain","Mardi Gras"]
  },
  "Państwa i miasta": {
-  easy: ["Czechy","Niemcy","Francja","Włochy","Hiszpania","Anglia","Rosja","USA","Chiny","Japonia","Egipt","Grecja","Gdańsk","Wrocław"],
-  medium: ["Brazylia","Australia","Kanada","Meksyk","Islandia","Szwajcaria","Turcja","Londyn","Wiedeń","Nowy Jork","Rzym","Barcelona","Amsterdam","Berlin"],
-  hard: ["Madagaskar","Nepal","Kuba","Tybet","Mongolia","Maroko","Kenia","Argentyna","Wenecja","Dubaj","Stambuł","Ateny","Lizbona","Singapur"]
+  easy: ["Czechy","Niemcy","Francja","Włochy","Hiszpania","Anglia","Rosja","USA","Chiny","Japonia","Egipt","Grecja","Gdańsk","Wrocław","Ukraina","Szwecja","Norwegia","Holandia","Belgia","Austria","Indie","Poznań","Łódź","Szczecin","Katowice","Lublin","Rzeszów","Toruń","Białystok","Bydgoszcz"],
+  medium: ["Brazylia","Australia","Kanada","Meksyk","Islandia","Szwajcaria","Turcja","Londyn","Wiedeń","Nowy Jork","Rzym","Barcelona","Amsterdam","Berlin","Dania","Finlandia","Irlandia","Szkocja","Węgry","Słowacja","Litwa","Łotwa","Estonia","Rumunia","Bułgaria","Chorwacja","Serbia","Korea","Tajlandia","Wietnam"],
+  hard: ["Madagaskar","Nepal","Kuba","Tybet","Mongolia","Maroko","Kenia","Argentyna","Wenecja","Dubaj","Stambuł","Ateny","Lizbona","Singapur","Uzbekistan","Kazachstan","Gruzja","Armenia","Azerbejdżan","Iran","Irak","Syria","Liban","Jordania","Etiopia","Tanzania","Ghana","Senegal","Boliwia","Ekwador"]
  },
  "Technologia": {
-  easy: ["komputer","smartfon","internet","klawiatura","myszka","laptop","ekran","wifi","aparat","słuchawki","bateria","gra","film","zdjęcie"],
-  medium: ["aplikacja","wirus","haker","skaner","router","meme","streaming","selfie","chmura","ekran dotykowy","czat","emotikon","bluetooth","hasło"],
-  hard: ["algorytm","sztuczna inteligencja","kryptowaluta","blockchain","serwer","firewall","mikroprocesor","wirtualna rzeczywistość","dron","robot","hologram","cyberprzestrzeń","kod źródłowy","satelita"]
+  easy: ["komputer","smartfon","internet","klawiatura","myszka","laptop","ekran","wifi","aparat","słuchawki","bateria","gra","film","zdjęcie","tablet","konsola","joystick","kabel","USB","wtyczka","gniazdko","antena","radio","kamera internetowa","mikrofon","głośnik","YouTube","TikTok","Facebook","Instagram"],
+  medium: ["aplikacja","wirus","haker","skaner","router","meme","streaming","selfie","chmura","ekran dotykowy","czat","emotikon","bluetooth","hasło","logowanie","konto","komentarz","lajk","obserwujący","influencer","vlog","stream","gamer","streamer","emoji","GIF","hashtag","tryb samolotowy","aktualizacja","kopia zapasowa"],
+  hard: ["algorytm","sztuczna inteligencja","kryptowaluta","blockchain","serwer","firewall","mikroprocesor","wirtualna rzeczywistość","dron","robot","hologram","cyberprzestrzeń","kod źródłowy","satelita","uczenie maszynowe","sieć neuronowa","chatbot","deepfake","ransomware","szyfrowanie","VPN","adres IP","DNS","chmura obliczeniowa","big data","internet rzeczy","5G","światłowód","nanotechnologia","komputer kwantowy"]
  }
 };
 const LVL = {easy:"Łatwy",medium:"Średni",hard:"Trudny"};
