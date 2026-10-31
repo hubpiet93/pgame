@@ -124,7 +124,7 @@ h1{margin:6px 0 2px;font-size:28px}
    <b>Przytrzymaj</b> palec na wybranej połowie ekranu, aż cała się wypełni kolorem. Puszczenie wcześniej anuluje.<br>
    <b>Faul</b> (słowo nie na P albo samo hasło): reszta krzyczy „faul!”, a zgadujący stuka pas. Pas i faul = 0 pkt.
   </div>
-  <div style="text-align:center;color:#556;font-size:12px;margin:14px 0 6px">wersja 2026-10-31 · pasek 2</div>
+  <div style="text-align:center;color:#556;font-size:12px;margin:14px 0 6px">wersja 2026-10-31 · pasek 3</div>
   <div id="playBar"><div id="poolInfo"></div><button id="play">Graj</button></div>
  </div>
 </div>
@@ -1704,7 +1704,7 @@ window.addEventListener("resize",()=>{if(R&&R.cur)fit()});
 function fmt(ms){const s=Math.max(0,Math.ceil(ms/1000));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
 function elapsed(){
  const now=R.frozen.size?R.frozenAt:Date.now();
- const s=Math.max(0,Math.floor((now-R.startAt-R.pausedTotal)/1000));
+ const s=R.cur?Math.max(0,Math.floor((now-R.wordAt)/1000)):0;
  return Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
 }
 function updateTop(){
