@@ -32,6 +32,10 @@ h1{margin:6px 0 2px;font-size:28px}
 #adv summary::after{content:"▾";transition:transform .2s}
 #adv[open] summary::after{transform:rotate(180deg)}
 #adv .group:last-child{margin-bottom:16px}
+#installHint summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between}
+#installHint summary::-webkit-details-marker{display:none}
+#installHint summary::after{content:"▾";transition:transform .2s}
+#installHint[open] summary::after{transform:rotate(180deg)}
 .hint{font-size:13px;color:#8892a6;line-height:1.4;margin:-2px 0 8px}
 .seg{display:flex;flex-wrap:wrap;gap:6px}
 .seg button{background:#1a1f2b;padding:10px 14px;border-radius:10px;font-size:15px;border:2px solid transparent}
@@ -117,7 +121,7 @@ h1{margin:6px 0 2px;font-size:28px}
  <div class="wrap">
   <h1>Czółko na P</h1>
   <p class="sub">Zgadujący trzyma telefon na czole. Reszta podpowiada tylko słowami na P.</p>
-  <div class="info" id="installHint" style="display:none"><b>Pełny ekran bez paska adresu:</b> w przeglądarce telefonu otwórz menu <b>Udostępnij</b> (iPhone) lub <b>⋮</b> (Android) → <b>Do ekranu początkowego</b>, a potem uruchamiaj grę z ikony „Czółko na P”. Z samej przeglądarki iPhone nie pozwala ukryć paska.</div>
+  <details class="info" id="installHint" style="display:none"><summary><b>Pełny ekran bez paska adresu</b></summary><div style="margin-top:8px">W przeglądarce telefonu otwórz menu <b>Udostępnij</b> (iPhone) lub <b>⋮</b> (Android) → <b>Do ekranu początkowego</b>, a potem uruchamiaj grę z ikony „Czółko na P”. Z samej przeglądarki iPhone nie pozwala ukryć paska.</div></details>
   <div id="opts"></div>
   <div class="info">
    <b>Jak grać:</b> zgadujący trzyma telefon przy czole ekranem na zewnątrz i stuka na ślepo.<br>
