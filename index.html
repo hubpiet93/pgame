@@ -6,6 +6,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b0d12">
+<meta name="apple-mobile-web-app-title" content="Czółko na P">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
 <title>Czółko na P</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
@@ -27,7 +32,7 @@ h1{margin:6px 0 2px;font-size:28px}
 .seg button.sel{background:#2b3a66;border-color:#6f8cff}
 .info{background:#141926;border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.45;color:#c4cada;margin:16px 0}
 .info b{color:#fff}
-#playBar{position:sticky;bottom:0;background:linear-gradient(to top,#0b0d12 75%,rgba(11,13,18,0));padding:18px 0 max(10px,env(safe-area-inset-bottom));margin-top:8px;z-index:2}
+#playBar{position:sticky;bottom:0;background:#0b0d12;box-shadow:0 -10px 14px #0b0d12;padding:8px 0 max(10px,env(safe-area-inset-bottom));margin-top:8px;z-index:2}
 #play{width:100%;background:#2ecc71;color:#06210f;font-weight:800;font-size:24px;padding:14px;border-radius:14px}
 #poolInfo{text-align:center;color:#9aa3b5;font-size:14px;margin-bottom:6px}
 
@@ -89,6 +94,7 @@ h1{margin:6px 0 2px;font-size:28px}
  <div class="wrap">
   <h1>Czółko na P</h1>
   <p class="sub">Zgadujący trzyma telefon na czole. Reszta podpowiada tylko słowami na P.</p>
+  <div class="info" id="installHint" style="display:none"><b>Pełny ekran bez paska adresu:</b> w przeglądarce telefonu otwórz menu <b>Udostępnij</b> (iPhone) lub <b>⋮</b> (Android) → <b>Do ekranu początkowego</b>, a potem uruchamiaj grę z ikony „Czółko na P”. Z samej przeglądarki iPhone nie pozwala ukryć paska.</div>
   <div id="opts"></div>
   <div class="info">
    <b>Jak grać:</b> zgadujący trzyma telefon przy czole ekranem na zewnątrz i stuka na ślepo.<br>
@@ -489,6 +495,9 @@ $("again").onclick=startRound;
 $("change").onclick=()=>{leaveImmersive();renderSettings();show("settings")};
 
 renderSettings();
+{const standalone=navigator.standalone||matchMedia("(display-mode: standalone)").matches||matchMedia("(display-mode: fullscreen)").matches;
+ const canFs=document.fullscreenEnabled;
+ if(!standalone&&!canFs)$("installHint").style.display="block";}
 </script>
 </body>
 </html>
