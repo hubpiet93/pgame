@@ -60,17 +60,12 @@ h1{margin:6px 0 2px;font-size:28px}
 .zone{flex:1;position:relative}
 .zone.ok{background:rgba(46,204,113,.09)}
 .zone.pas{background:rgba(255,90,90,.09)}
-.bubble{position:absolute;left:50%;top:50%;width:min(52vh,38vw);height:min(52vh,38vw);margin:calc(min(52vh,38vw)/-2) 0 0 calc(min(52vh,38vw)/-2);border-radius:50%;transform:scale(.05);opacity:0;pointer-events:none;
- background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.55) 0,rgba(255,255,255,.12) 18%,rgba(255,255,255,.04) 55%,rgba(255,255,255,.1) 100%);border:3px solid rgba(255,255,255,.55);box-shadow:0 0 30px rgba(255,255,255,.25),inset 0 0 30px rgba(255,255,255,.15)}
-.zone.ok .bubble{border-color:#6dffa0;box-shadow:0 0 30px rgba(46,204,113,.5),inset 0 0 30px rgba(46,204,113,.3)}
-.zone.pas .bubble{border-color:#ff8a8a;box-shadow:0 0 30px rgba(255,90,90,.5),inset 0 0 30px rgba(255,90,90,.3)}
-.bubble.grow{transform:scale(1);opacity:1}
-.burst{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none}
-.burst i{position:absolute;left:-.8vmin;top:-.8vmin;width:1.6vmin;height:1.6vmin;border-radius:50%;background:#fff;animation:fly .45s ease-out forwards}
-.burst.ok i{background:#6dffa0}.burst.pas i{background:#ff8a8a}
-.burst::before{content:"";position:absolute;left:calc(min(52vh,38vw)/-2);top:calc(min(52vh,38vw)/-2);width:min(52vh,38vw);height:min(52vh,38vw);border-radius:50%;border:4px solid #fff;animation:ring .35s ease-out forwards}
-@keyframes fly{to{transform:translate(var(--x),var(--y)) scale(.2);opacity:0}}
-@keyframes ring{to{transform:scale(1.5);opacity:0}}
+.fill{position:absolute;inset:0;transform:scaleY(0);transform-origin:bottom;pointer-events:none;opacity:.9}
+.zone.ok .fill{background:linear-gradient(to top,rgba(46,204,113,.85),rgba(46,204,113,.45))}
+.zone.pas .fill{background:linear-gradient(to top,rgba(235,70,70,.85),rgba(235,70,70,.45))}
+.fill.grow{transform:scaleY(1)}
+.zone.nudge .lab{opacity:1;animation:nudge .6s}
+@keyframes nudge{0%,100%{transform:scale(1)}30%{transform:scale(1.25)}60%{transform:scale(.95)}}
 .zone .lab small{display:block;font-size:.55em;font-weight:600;opacity:.8}
 .zone .lab{position:absolute;bottom:max(12px,env(safe-area-inset-bottom));left:0;right:0;text-align:center;font-weight:800;font-size:clamp(13px,min(4.5vw,6.5vh),30px);line-height:1.1;opacity:.55}
 #zL .lab{color:#6dffa0}#zR .lab{color:#ff8a8a}
@@ -126,10 +121,10 @@ h1{margin:6px 0 2px;font-size:28px}
    <b>Jak grać:</b> zgadujący trzyma telefon przy czole ekranem na zewnątrz i stuka na ślepo.<br>
    <b id="infoOk">Prawa ręka zgadującego (lewa połowa ekranu)</b> = zgadnięte.<br>
    <b id="infoPas">Lewa ręka zgadującego (prawa połowa ekranu)</b> = pas.<br>
-   <b>Stuknij i przytrzymaj</b> pół sekundy, aż bąbelek pęknie. Puszczenie wcześniej anuluje.<br>
+   <b>Przytrzymaj</b> palec na wybranej połowie ekranu, aż cała się wypełni kolorem. Puszczenie wcześniej anuluje.<br>
    <b>Faul</b> (słowo nie na P albo samo hasło): reszta krzyczy „faul!”, a zgadujący stuka pas. Pas i faul = 0 pkt.
   </div>
-  <div style="text-align:center;color:#556;font-size:12px;margin:14px 0 6px">wersja 2026-10-31 · podpowiedzi 3</div>
+  <div style="text-align:center;color:#556;font-size:12px;margin:14px 0 6px">wersja 2026-10-31 · pasek 1</div>
   <div id="playBar"><div id="poolInfo"></div><button id="play">Graj</button></div>
  </div>
 </div>
@@ -142,8 +137,8 @@ h1{margin:6px 0 2px;font-size:28px}
 
 <div id="game" class="screen">
  <div id="zones">
-  <div class="zone" id="zL"><div class="lab"></div><div class="bubble"></div></div>
-  <div class="zone" id="zR"><div class="lab"></div><div class="bubble"></div></div>
+  <div class="zone" id="zL"><div class="lab"></div><div class="fill"></div></div>
+  <div class="zone" id="zR"><div class="lab"></div><div class="fill"></div></div>
  </div>
  <div id="wordBox">
   <div id="meta"></div>
@@ -1657,8 +1652,8 @@ function setupGame(){
  const t=sideTexts();
  const okL=!S.swap;
  $("zL").className="zone "+(okL?"ok":"pas");$("zR").className="zone "+(okL?"pas":"ok");
- $("zL").firstChild.innerHTML=(okL?"✓ ZGADNIĘTE":"PAS")+"<small>przytrzymaj</small>";
- $("zR").firstChild.innerHTML=(okL?"PAS":"✓ ZGADNIĘTE")+"<small>przytrzymaj</small>";
+ $("zL").firstChild.innerHTML=(okL?"✓ ZGADNIĘTE":"PAS")+"<small>przytrzymaj, aż się wypełni</small>";
+ $("zR").firstChild.innerHTML=(okL?"PAS":"✓ ZGADNIĘTE")+"<small>przytrzymaj, aż się wypełni</small>";
  $("zL").firstChild.style.color=okL?"#6dffa0":"#ff8a8a";
  $("zR").firstChild.style.color=okL?"#ff8a8a":"#6dffa0";
 }
@@ -1764,39 +1759,33 @@ function onZone(side){ // side: "L" lub "R"
  answer(side==="L"?okLeft:!okLeft);
 }
 /* przytrzymanie = bąbelek, który pęka */
-const HOLD=600;
+const HOLD=500;
 let hold=null;
-function bubbleEl(side){return $(side==="L"?"zL":"zR").querySelector(".bubble")}
+function fillEl(side){return $(side==="L"?"zL":"zR").querySelector(".fill")}
 function holdStart(side,e){
  if(hold||!R||R.locked||R.ended||R.pausedAt||!R.cur)return;
- const bub=bubbleEl(side);
- bub.className="bubble";void bub.offsetWidth;
- bub.style.transition="transform "+HOLD+"ms cubic-bezier(.3,.6,.5,1),opacity 150ms";
- bub.className="bubble grow";
+ const f=fillEl(side);
+ f.className="fill";f.style.transition="none";void f.offsetWidth;
+ f.style.transition="transform "+HOLD+"ms linear";
+ f.className="fill grow";
  vib(12);
  let n=0;
- hold={side,id:e.pointerId,bub,t:setTimeout(()=>holdDone(),HOLD),iv:setInterval(()=>{n++;vib(8+n*4)},100)};
+ hold={side,id:e.pointerId,f,t:setTimeout(()=>holdDone(),HOLD),iv:setInterval(()=>{n++;vib(8+n*4)},100),t0:Date.now()};
 }
 function holdCancel(){
  if(!hold)return;
  clearTimeout(hold.t);clearInterval(hold.iv);
- hold.bub.style.transition="transform 180ms ease-out,opacity 180ms";
- hold.bub.className="bubble";
+ const z=hold.f.parentNode;
+ hold.f.style.transition="transform 200ms ease-out";
+ hold.f.className="fill";
+ if(Date.now()-hold.t0<HOLD){z.classList.remove("nudge");void z.offsetWidth;z.classList.add("nudge");setTimeout(()=>z.classList.remove("nudge"),700)}
  hold=null;
 }
 function holdDone(){
  if(!hold)return;
  clearInterval(hold.iv);
- const {side,bub}=hold;hold=null;
- bub.className="bubble";bub.style.transition="none";
- const zone=bub.parentNode;
- const ring=document.createElement("div");ring.className="burst "+(zone.classList.contains("ok")?"ok":"pas");
- for(let i=0;i<12;i++){
-  const d=document.createElement("i"),a=i/12*Math.PI*2,r=40+Math.random()*30;
-  d.style.setProperty("--x",Math.cos(a)*r+"vmin");d.style.setProperty("--y",Math.sin(a)*r+"vmin");
-  ring.appendChild(d);
- }
- zone.appendChild(ring);setTimeout(()=>ring.remove(),500);
+ const {side,f}=hold;hold=null;
+ f.style.transition="none";f.className="fill";
  onZone(side);
 }
 for(const [id,side] of [["zL","L"],["zR","R"]]){
