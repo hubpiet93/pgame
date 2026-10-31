@@ -47,7 +47,11 @@ h1{margin:6px 0 2px;font-size:28px}
 #game{background:#0b0d12;flex-direction:column}
 #zones{position:absolute;inset:0;display:flex}
 .zone{flex:1;position:relative}
-.zone .lab{position:absolute;bottom:max(10px,env(safe-area-inset-bottom));left:0;right:0;text-align:center;font-weight:800;font-size:clamp(16px,4vw,28px);opacity:.28}
+.zone.ok{background:rgba(46,204,113,.09)}
+.zone.pas{background:rgba(255,90,90,.09)}
+.zone::before{content:attr(data-sym);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:min(46vh,30vw);opacity:.13;pointer-events:none}
+.zone.ok::before{color:#2ecc71}.zone.pas::before{color:#ff5a5a;font-size:min(30vh,20vw)}
+.zone .lab{position:absolute;bottom:max(12px,env(safe-area-inset-bottom));left:0;right:0;text-align:center;font-weight:800;font-size:clamp(18px,4.5vw,30px);opacity:.55}
 #zL .lab{color:#6dffa0}#zR .lab{color:#ff8a8a}
 #zL.pas .lab{color:#ff8a8a}#zR.ok .lab{color:#6dffa0}
 .zone+.zone{border-left:2px dashed rgba(255,255,255,.12)}
@@ -351,8 +355,9 @@ function setupGame(){
  const t=sideTexts();
  const okL=!S.swap;
  $("zL").className="zone "+(okL?"ok":"pas");$("zR").className="zone "+(okL?"pas":"ok");
- $("zL").firstChild.textContent=okL?"✓":"PAS";
- $("zR").firstChild.textContent=okL?"PAS":"✓";
+ $("zL").firstChild.textContent=okL?"✓ ZGADNIĘTE":"PAS";
+ $("zR").firstChild.textContent=okL?"PAS":"✓ ZGADNIĘTE";
+ $("zL").dataset.sym=okL?"✓":"PAS";$("zR").dataset.sym=okL?"PAS":"✓";
  $("zL").firstChild.style.color=okL?"#6dffa0":"#ff8a8a";
  $("zR").firstChild.style.color=okL?"#ff8a8a":"#6dffa0";
 }
