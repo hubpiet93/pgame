@@ -112,7 +112,6 @@ h1{margin:6px 0 2px;font-size:28px}
 </head>
 <body>
 
-<label id="hap" style="position:fixed;left:-99px;top:0;opacity:0;pointer-events:none"><input type="checkbox" switch tabindex="-1"></label>
 <div id="settings" class="screen on">
  <div class="wrap">
   <h1>Czółko na P</h1>
@@ -339,7 +338,14 @@ function beep(f,d,type){
 function vib(p){
  try{
   if(navigator.vibrate)navigator.vibrate(p);
-  else{const l=$("hap");if(l)l.click()} // iPhone: haptyka przez przełącznik (Safari 17.4+), jeśli działa
+  else{
+   if(!window._hap){ // iPhone: haptyka przez przełącznik (Safari 17.4+)
+    const l=document.createElement("label");l.setAttribute("aria-hidden","true");l.style.display="none";
+    const i=document.createElement("input");i.type="checkbox";i.setAttribute("switch","");
+    l.appendChild(i);document.head.appendChild(l);window._hap=l;
+   }
+   window._hap.click();
+  }
  }catch(e){}
 }
 
