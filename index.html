@@ -124,7 +124,7 @@ h1{margin:6px 0 2px;font-size:28px}
    <b>Przytrzymaj</b> palec na wybranej połowie ekranu, aż cała się wypełni kolorem. Puszczenie wcześniej anuluje.<br>
    <b>Faul</b> (słowo nie na P albo samo hasło): reszta krzyczy „faul!”, a zgadujący stuka pas. Pas i faul = 0 pkt.
   </div>
-  <div style="text-align:center;color:#556;font-size:12px;margin:14px 0 6px">wersja 2026-10-31 · pasek 1</div>
+  <div style="text-align:center;color:#556;font-size:12px;margin:14px 0 6px">wersja 2026-10-31 · pasek 2</div>
   <div id="playBar"><div id="poolInfo"></div><button id="play">Graj</button></div>
  </div>
 </div>
@@ -1638,7 +1638,7 @@ function startRound(){
  let used=new Set(lsGet("pnp_used",[]));
  let fresh=p.filter(x=>!used.has(x.w));
  if(!fresh.length){p.forEach(x=>used.delete(x.w));fresh=p}
- R={queue:shuffle(fresh),used,items:[],cur:null,score:0,locked:true,ended:false,end:0,pausedAt:0,lastSec:-1,frozen:new Set(),frozenAt:0,wordAt:0};
+ R={queue:shuffle(fresh),used,items:[],cur:null,score:0,locked:true,ended:false,end:0,pausedAt:0,lastSec:-1,frozen:new Set(),frozenAt:0,wordAt:0,startAt:0,pausedTotal:0};
  const t=sideTexts();$("cdOk").textContent="✓ "+t.ok;$("cdPas").textContent="PAS "+t.pas;
  show("countdown");
  let n=3;$("cdNum").textContent=n;beep(600,.15);
@@ -1660,6 +1660,7 @@ function setupGame(){
 function beginPlay(){
  setupGame();show("game");
  $("score").textContent="✓ 0";
+ R.startAt=Date.now();
  if(S.mode==="time")R.end=Date.now()+S.time*1000;
  R.locked=false;
  nextWord();
@@ -1701,21 +1702,26 @@ function fit(){
 }
 window.addEventListener("resize",()=>{if(R&&R.cur)fit()});
 function fmt(ms){const s=Math.max(0,Math.ceil(ms/1000));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
+function elapsed(){
+ const now=R.frozen.size?R.frozenAt:Date.now();
+ const s=Math.max(0,Math.floor((now-R.startAt-R.pausedTotal)/1000));
+ return Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
+}
 function updateTop(){
  $("score").textContent="✓ "+R.score;
  const tm=$("timer");
  if(S.mode==="time"){
   const left=R.end-Date.now();tm.textContent=fmt(left);tm.classList.toggle("red",left<10000);
  }else if(S.mode==="count"){
-  tm.classList.remove("red");tm.textContent=Math.min(R.items.length+1,S.count)+"/"+S.count;
- }else{tm.classList.remove("red");tm.textContent="∞"}
+  tm.classList.remove("red");tm.textContent=Math.min(R.items.length+1,S.count)+"/"+S.count+" · "+elapsed();
+ }else{tm.classList.remove("red");tm.textContent="∞ · "+elapsed()}
 }
 function freeze(r){if(!R.frozen.size)R.frozenAt=Date.now();R.frozen.add(r)}
 function unfreeze(r){
  if(!R.frozen.delete(r)||R.frozen.size)return;
  const d=Date.now()-R.frozenAt;
  if(S.mode==="time")R.end+=d;
- R.wordAt+=d;
+ R.wordAt+=d;R.pausedTotal+=d;
  R.frozenAt=0;
 }
 function tick(){
@@ -1726,7 +1732,7 @@ function tick(){
   const sec=Math.ceil(left/1000);
   if(sec<=5&&sec!==R.lastSec){R.lastSec=sec;beep(750,.12,"square")}
   updateTop();
- }
+ }else updateTop();
  showHint();
 }
 function answer(ok){
