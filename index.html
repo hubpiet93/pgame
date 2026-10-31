@@ -15,7 +15,7 @@ html,body{margin:0;height:100%;background:#0b0d12;color:#f2f4f8;font-family:syst
 button{font:inherit;color:inherit;border:0;cursor:pointer;touch-action:manipulation}
 
 /* ustawienia */
-#settings{flex-direction:column;overflow-y:auto;padding:16px max(16px,env(safe-area-inset-right)) 24px max(16px,env(safe-area-inset-left));align-items:center}
+#settings{flex-direction:column;overflow-y:auto;padding:16px max(16px,env(safe-area-inset-right)) 0 max(16px,env(safe-area-inset-left));align-items:center}
 #settings .wrap{width:100%;max-width:560px}
 h1{margin:6px 0 2px;font-size:28px}
 .sub{color:#9aa3b5;margin:0 0 14px;font-size:14px}
@@ -27,8 +27,9 @@ h1{margin:6px 0 2px;font-size:28px}
 .seg button.sel{background:#2b3a66;border-color:#6f8cff}
 .info{background:#141926;border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.45;color:#c4cada;margin:16px 0}
 .info b{color:#fff}
-#play{width:100%;background:#2ecc71;color:#06210f;font-weight:800;font-size:24px;padding:16px;border-radius:14px;margin-top:6px}
-#poolInfo{text-align:center;color:#9aa3b5;font-size:14px;margin-top:8px}
+#playBar{position:sticky;bottom:0;background:linear-gradient(to top,#0b0d12 75%,rgba(11,13,18,0));padding:18px 0 max(10px,env(safe-area-inset-bottom));margin-top:8px;z-index:2}
+#play{width:100%;background:#2ecc71;color:#06210f;font-weight:800;font-size:24px;padding:14px;border-radius:14px}
+#poolInfo{text-align:center;color:#9aa3b5;font-size:14px;margin-bottom:6px}
 
 /* odliczanie */
 #countdown{flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px;gap:10px}
@@ -91,8 +92,7 @@ h1{margin:6px 0 2px;font-size:28px}
    <b id="infoPas">Lewa ręka zgadującego (prawa połowa ekranu)</b> = pas.<br>
    <b>Faul</b> (słowo nie na P albo samo hasło): reszta krzyczy „faul!”, a zgadujący stuka pas. Pas i faul = 0 pkt.
   </div>
-  <button id="play">Graj</button>
-  <div id="poolInfo"></div>
+  <div id="playBar"><div id="poolInfo"></div><button id="play">Graj</button></div>
  </div>
 </div>
 
