@@ -130,6 +130,7 @@ h1{margin:6px 0 2px;font-size:28px}
    <b>Stuknij i przytrzymaj</b> pół sekundy, aż bąbelek pęknie. Puszczenie wcześniej anuluje.<br>
    <b>Faul</b> (słowo nie na P albo samo hasło): reszta krzyczy „faul!”, a zgadujący stuka pas. Pas i faul = 0 pkt.
   </div>
+  <div style="text-align:center;color:#556;font-size:12px;margin:14px 0 6px">wersja 2026-10-31 · podpowiedzi</div>
   <div id="playBar"><div id="poolInfo"></div><button id="play">Graj</button></div>
  </div>
 </div>
@@ -1502,7 +1503,7 @@ const OPTS = [
  {k:"mode",l:"Tryb",o:[["time","Na czas"],["count","Na liczbę haseł"],["endless","Bez końca"]]},
  {k:"time",l:"Czas rundy",o:[[30,"30 s"],[60,"60 s"],[90,"90 s"],[120,"2 min"]],show:s=>s.mode==="time"},
  {k:"count",l:"Liczba haseł",o:[[5,"5"],[10,"10"],[15,"15"],[20,"20"]],show:s=>s.mode==="count"},
- {k:"hints",l:"Podpowiedź na P",hint:"Tylko w trybie na czas: w ostatnich 30 sekundach pod hasłem pojawią się dwa słowa na P, które pomagają je zgadnąć.",show:s=>s.mode==="time",o:[[false,"wył."],[true,"wł."]]},
+ {k:"hints",l:"Podpowiedź na P",hint:"Działa tylko w trybie na czas: w ostatnich 30 sekundach pod hasłem pojawią się dwa słowa na P, które pomagają je zgadnąć.",o:[[false,"wył."],[true,"wł."]]},
  {k:"cats",l:"Kategorie",multi:true,hint:"Możesz wybrać kilka naraz. „Wszystkie” = bez ograniczeń.",o:Object.keys(WORDS).map(c=>[c,c])},
  {k:"lvl",l:"Poziom trudności",o:[["easy","Łatwy"],["medium","Średni"],["hard","Trudny"],["mixed","Mieszany"]]},
  {k:"swap",adv:true,l:"Zamień strony",hint:"Domyślnie zgadujący stuka PRAWĄ ręką, gdy zgadł (to lewa połowa ekranu, bo telefon jest do niego odwrócony), a LEWĄ, gdy pasuje. Włącz to, jeśli zgadującemu wygodniej odwrotnie: prawa ręka = pas, lewa = zgadnięte.",o:[[false,"wył."],[true,"wł."]]},
