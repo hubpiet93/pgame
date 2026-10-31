@@ -106,6 +106,7 @@ h1{margin:6px 0 2px;font-size:28px}
 </head>
 <body>
 
+<label id="hap" style="position:fixed;left:-99px;top:0;opacity:0;pointer-events:none"><input type="checkbox" switch tabindex="-1"></label>
 <div id="settings" class="screen on">
  <div class="wrap">
   <h1>Czółko na P</h1>
@@ -324,7 +325,12 @@ function beep(f,d,type){
   o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+d);
  }catch(e){}
 }
-function vib(p){try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}}
+function vib(p){
+ try{
+  if(navigator.vibrate)navigator.vibrate(p);
+  else{const l=$("hap");if(l)l.click()} // iPhone: haptyka przez przełącznik (Safari 17.4+), jeśli działa
+ }catch(e){}
+}
 
 /* pełny ekran, orientacja, wake lock */
 let wl=null,inRound=false;
@@ -467,17 +473,20 @@ function holdStart(side,e){
  bub.className="bubble";void bub.offsetWidth;
  bub.style.transition="transform "+HOLD+"ms cubic-bezier(.3,.6,.5,1),opacity 150ms";
  bub.className="bubble grow";
- hold={side,id:e.pointerId,bub,t:setTimeout(()=>holdDone(),HOLD)};
+ vib(12);
+ let n=0;
+ hold={side,id:e.pointerId,bub,t:setTimeout(()=>holdDone(),HOLD),iv:setInterval(()=>{n++;vib(8+n*4)},100)};
 }
 function holdCancel(){
  if(!hold)return;
- clearTimeout(hold.t);
+ clearTimeout(hold.t);clearInterval(hold.iv);
  hold.bub.style.transition="transform 180ms ease-out,opacity 180ms";
  hold.bub.className="bubble";
  hold=null;
 }
 function holdDone(){
  if(!hold)return;
+ clearInterval(hold.iv);
  const {side,bub}=hold;hold=null;
  bub.className="bubble";bub.style.transition="none";
  const zone=bub.parentNode;
