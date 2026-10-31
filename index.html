@@ -73,7 +73,7 @@ h1{margin:6px 0 2px;font-size:28px}
 @keyframes fly{to{transform:translate(var(--x),var(--y)) scale(.2);opacity:0}}
 @keyframes ring{to{transform:scale(1.5);opacity:0}}
 .zone .lab small{display:block;font-size:.55em;font-weight:600;opacity:.8}
-.zone .lab{position:absolute;bottom:max(12px,env(safe-area-inset-bottom));left:0;right:0;text-align:center;font-weight:800;font-size:clamp(18px,4.5vw,30px);opacity:.55}
+.zone .lab{position:absolute;bottom:max(12px,env(safe-area-inset-bottom));left:0;right:0;text-align:center;font-weight:800;font-size:clamp(13px,min(4.5vw,6.5vh),30px);line-height:1.1;opacity:.55}
 #zL .lab{color:#6dffa0}#zR .lab{color:#ff8a8a}
 #zL.pas .lab{color:#ff8a8a}#zR.ok .lab{color:#6dffa0}
 .zone+.zone{border-left:2px dashed rgba(255,255,255,.12)}
@@ -81,11 +81,11 @@ h1{margin:6px 0 2px;font-size:28px}
 #bar .mid{color:#c4cada}
 #timer.red{color:#ff4d4d}
 #quit{pointer-events:auto;background:rgba(255,255,255,.1);width:44px;height:44px;border-radius:50%;font-size:20px;line-height:1}
-#wordBox{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;padding:calc(56px + env(safe-area-inset-top)) 7% 56px;text-align:center}
-#meta{font-size:clamp(14px,3.2vw,22px);color:#9aa3b5;margin-bottom:6px;min-height:1.3em}
+#wordBox{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;padding:calc(50px + env(safe-area-inset-top)) 7% calc(max(12px,env(safe-area-inset-bottom)) + clamp(40px,min(11vw,17vh),80px));text-align:center}
+#meta{font-size:clamp(11px,min(3.2vw,4.5vh),22px);color:#9aa3b5;margin-bottom:6px;min-height:1.3em}
 #word{font-weight:900;line-height:1.1;max-width:100%;overflow-wrap:anywhere;font-size:20vh}
-#hintBox{margin-top:8px;font-size:clamp(16px,4vw,28px);color:#7dd3fc;font-weight:800;min-height:1.3em}
-#reminder{margin-top:10px;font-size:clamp(14px,3.4vw,22px);color:#ffd166;font-weight:700}
+#hintBox{margin-top:4px;font-size:clamp(13px,min(4vw,6vh),28px);color:#7dd3fc;font-weight:800;min-height:1.3em}
+#reminder{margin-top:6px;font-size:clamp(11px,min(3.4vw,5vh),22px);color:#ffd166;font-weight:700}
 #flash{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;font-weight:900;z-index:5;pointer-events:auto;line-height:1.05}
 #flash.ok{background:#1faa59;display:flex}
 #flash.pas{background:#d63b3b;display:flex}
@@ -1682,11 +1682,15 @@ function showHint(){
 }
 function fit(){
  const el=$("word"),box=$("wordBox");
+ const cs=getComputedStyle(box);
+ const avail=box.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom);
+ const others=$("meta").offsetHeight+$("reminder").offsetHeight+$("hintBox").offsetHeight+24;
+ const maxH=Math.max(30,avail-others);
+ const maxW=box.clientWidth*0.86;
  let fs=Math.min(window.innerHeight*0.26,window.innerWidth*0.18);
  el.style.fontSize=fs+"px";
- const maxW=box.clientWidth*0.86,maxH=box.clientHeight*0.55;
  let i=0;
- while((el.scrollWidth>maxW||el.offsetHeight>maxH)&&fs>14&&i++<60){fs*=0.92;el.style.fontSize=fs+"px"}
+ while((el.scrollWidth>maxW||el.offsetHeight>maxH)&&fs>12&&i++<80){fs*=0.92;el.style.fontSize=fs+"px"}
 }
 window.addEventListener("resize",()=>{if(R&&R.cur)fit()});
 function fmt(ms){const s=Math.max(0,Math.ceil(ms/1000));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
