@@ -51,6 +51,18 @@ h1{margin:6px 0 2px;font-size:28px}
 .zone.pas{background:rgba(255,90,90,.09)}
 .zone::before{content:attr(data-sym);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:min(46vh,30vw);opacity:.13;pointer-events:none}
 .zone.ok::before{color:#2ecc71}.zone.pas::before{color:#ff5a5a;font-size:min(30vh,20vw)}
+.bubble{position:absolute;left:50%;top:50%;width:min(52vh,38vw);height:min(52vh,38vw);margin:calc(min(52vh,38vw)/-2) 0 0 calc(min(52vh,38vw)/-2);border-radius:50%;transform:scale(.05);opacity:0;pointer-events:none;
+ background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.55) 0,rgba(255,255,255,.12) 18%,rgba(255,255,255,.04) 55%,rgba(255,255,255,.1) 100%);border:3px solid rgba(255,255,255,.55);box-shadow:0 0 30px rgba(255,255,255,.25),inset 0 0 30px rgba(255,255,255,.15)}
+.zone.ok .bubble{border-color:#6dffa0;box-shadow:0 0 30px rgba(46,204,113,.5),inset 0 0 30px rgba(46,204,113,.3)}
+.zone.pas .bubble{border-color:#ff8a8a;box-shadow:0 0 30px rgba(255,90,90,.5),inset 0 0 30px rgba(255,90,90,.3)}
+.bubble.grow{transform:scale(1);opacity:1}
+.burst{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none}
+.burst i{position:absolute;left:-.8vmin;top:-.8vmin;width:1.6vmin;height:1.6vmin;border-radius:50%;background:#fff;animation:fly .45s ease-out forwards}
+.burst.ok i{background:#6dffa0}.burst.pas i{background:#ff8a8a}
+.burst::before{content:"";position:absolute;left:calc(min(52vh,38vw)/-2);top:calc(min(52vh,38vw)/-2);width:min(52vh,38vw);height:min(52vh,38vw);border-radius:50%;border:4px solid #fff;animation:ring .35s ease-out forwards}
+@keyframes fly{to{transform:translate(var(--x),var(--y)) scale(.2);opacity:0}}
+@keyframes ring{to{transform:scale(1.5);opacity:0}}
+.zone .lab small{display:block;font-size:.55em;font-weight:600;opacity:.8}
 .zone .lab{position:absolute;bottom:max(12px,env(safe-area-inset-bottom));left:0;right:0;text-align:center;font-weight:800;font-size:clamp(18px,4.5vw,30px);opacity:.55}
 #zL .lab{color:#6dffa0}#zR .lab{color:#ff8a8a}
 #zL.pas .lab{color:#ff8a8a}#zR.ok .lab{color:#6dffa0}
@@ -104,6 +116,7 @@ h1{margin:6px 0 2px;font-size:28px}
    <b>Jak grać:</b> zgadujący trzyma telefon przy czole ekranem na zewnątrz i stuka na ślepo.<br>
    <b id="infoOk">Prawa ręka zgadującego (lewa połowa ekranu)</b> = zgadnięte.<br>
    <b id="infoPas">Lewa ręka zgadującego (prawa połowa ekranu)</b> = pas.<br>
+   <b>Stuknij i przytrzymaj</b> pół sekundy, aż bąbelek pęknie. Puszczenie wcześniej anuluje.<br>
    <b>Faul</b> (słowo nie na P albo samo hasło): reszta krzyczy „faul!”, a zgadujący stuka pas. Pas i faul = 0 pkt.
   </div>
   <div id="playBar"><div id="poolInfo"></div><button id="play">Graj</button></div>
@@ -118,8 +131,8 @@ h1{margin:6px 0 2px;font-size:28px}
 
 <div id="game" class="screen">
  <div id="zones">
-  <div class="zone" id="zL"><div class="lab"></div></div>
-  <div class="zone" id="zR"><div class="lab"></div></div>
+  <div class="zone" id="zL"><div class="lab"></div><div class="bubble"></div></div>
+  <div class="zone" id="zR"><div class="lab"></div><div class="bubble"></div></div>
  </div>
  <div id="wordBox">
   <div id="meta"></div>
@@ -355,8 +368,8 @@ function setupGame(){
  const t=sideTexts();
  const okL=!S.swap;
  $("zL").className="zone "+(okL?"ok":"pas");$("zR").className="zone "+(okL?"pas":"ok");
- $("zL").firstChild.textContent=okL?"✓ ZGADNIĘTE":"PAS";
- $("zR").firstChild.textContent=okL?"PAS":"✓ ZGADNIĘTE";
+ $("zL").firstChild.innerHTML=(okL?"✓ ZGADNIĘTE":"PAS")+"<small>przytrzymaj</small>";
+ $("zR").firstChild.innerHTML=(okL?"PAS":"✓ ZGADNIĘTE")+"<small>przytrzymaj</small>";
  $("zL").dataset.sym=okL?"✓":"PAS";$("zR").dataset.sym=okL?"PAS":"✓";
  $("zL").firstChild.style.color=okL?"#6dffa0":"#ff8a8a";
  $("zR").firstChild.style.color=okL?"#ff8a8a":"#6dffa0";
@@ -444,8 +457,44 @@ function onZone(side){ // side: "L" lub "R"
  const okLeft=!S.swap;
  answer(side==="L"?okLeft:!okLeft);
 }
-$("zL").addEventListener("pointerdown",e=>{e.preventDefault();onZone("L")});
-$("zR").addEventListener("pointerdown",e=>{e.preventDefault();onZone("R")});
+/* przytrzymanie = bąbelek, który pęka */
+const HOLD=600;
+let hold=null;
+function bubbleEl(side){return $(side==="L"?"zL":"zR").querySelector(".bubble")}
+function holdStart(side,e){
+ if(hold||!R||R.locked||R.ended||R.pausedAt||!R.cur)return;
+ const bub=bubbleEl(side);
+ bub.className="bubble";void bub.offsetWidth;
+ bub.style.transition="transform "+HOLD+"ms cubic-bezier(.3,.6,.5,1),opacity 150ms";
+ bub.className="bubble grow";
+ hold={side,id:e.pointerId,bub,t:setTimeout(()=>holdDone(),HOLD)};
+}
+function holdCancel(){
+ if(!hold)return;
+ clearTimeout(hold.t);
+ hold.bub.style.transition="transform 180ms ease-out,opacity 180ms";
+ hold.bub.className="bubble";
+ hold=null;
+}
+function holdDone(){
+ if(!hold)return;
+ const {side,bub}=hold;hold=null;
+ bub.className="bubble";bub.style.transition="none";
+ const zone=bub.parentNode;
+ const ring=document.createElement("div");ring.className="burst "+(zone.classList.contains("ok")?"ok":"pas");
+ for(let i=0;i<12;i++){
+  const d=document.createElement("i"),a=i/12*Math.PI*2,r=40+Math.random()*30;
+  d.style.setProperty("--x",Math.cos(a)*r+"vmin");d.style.setProperty("--y",Math.sin(a)*r+"vmin");
+  ring.appendChild(d);
+ }
+ zone.appendChild(ring);setTimeout(()=>ring.remove(),500);
+ onZone(side);
+}
+for(const [id,side] of [["zL","L"],["zR","R"]]){
+ $(id).addEventListener("pointerdown",e=>{e.preventDefault();holdStart(side,e)});
+}
+for(const ev of ["pointerup","pointercancel"])window.addEventListener(ev,e=>{if(hold&&e.pointerId===hold.id)holdCancel()});
+document.addEventListener("contextmenu",e=>e.preventDefault());
 $("flash").addEventListener("pointerdown",e=>e.preventDefault());
 
 /* przycisk ✕ */
@@ -468,7 +517,7 @@ $("cYes").addEventListener("pointerdown",e=>{
 
 function finish(){
  if(!R||R.ended)return;
- R.ended=true;
+ R.ended=true;holdCancel();
  clearInterval(R.tick);if(R.flashT){clearTimeout(R.flashT);R.flashT=null}
  $("flash").className="";$("confirm").classList.remove("on");
  if(R.cur)R.items.push({w:R.cur.w,r:"time"});
