@@ -26,17 +26,15 @@ h1{margin:6px 0 2px;font-size:28px}
 .sub{color:#9aa3b5;margin:0 0 14px;font-size:14px}
 .group{margin:14px 0}
 .group label{display:block;font-size:13px;color:#9aa3b5;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
-#adv{margin:18px 0 4px;background:#141926;border-radius:12px;padding:0 14px}
-#adv summary{cursor:pointer;padding:14px 0;font-size:15px;color:#c4cada;list-style:none;display:flex;justify-content:space-between}
-#adv summary::-webkit-details-marker{display:none}
-#adv summary::after{content:"▾";transition:transform .2s}
-#adv[open] summary::after{transform:rotate(180deg)}
-#adv .group:last-child{margin-bottom:16px}
-#installHint summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between}
-#installHint summary::-webkit-details-marker{display:none}
-#installHint summary::after{content:"▾";transition:transform .2s}
-#installHint[open] summary::after{transform:rotate(180deg)}
-#opts select{width:100%;background:#1a1f2b;color:#f2f4f8;border:2px solid #2b3a66;border-radius:10px;padding:12px;font-size:16px}
+.sec{margin:10px 0;background:#141926;border-radius:14px;padding:0 14px}
+.sec summary{cursor:pointer;padding:14px 0;list-style:none;display:flex;align-items:center;gap:10px}
+.sec summary::-webkit-details-marker{display:none}
+.sec .st{font-weight:800;font-size:17px;white-space:nowrap}
+.sec .ss{flex:1;text-align:right;color:#8892a6;font-size:13px;line-height:1.25}
+.sec summary::after{content:"▾";color:#8892a6;transition:transform .2s}
+.sec[open] summary::after{transform:rotate(180deg)}
+.secbody{padding-bottom:6px}
+.secbody .group:first-child{margin-top:0}
 .hint{font-size:13px;color:#8892a6;line-height:1.4;margin:-2px 0 8px}
 .seg{display:flex;flex-wrap:wrap;gap:6px}
 .seg button{background:#1a1f2b;padding:10px 14px;border-radius:10px;font-size:15px;border:2px solid transparent}
@@ -124,7 +122,7 @@ h1{margin:6px 0 2px;font-size:28px}
    <b>Przytrzymaj</b> palec na wybranej połowie ekranu, aż cała się wypełni kolorem. Puszczenie wcześniej anuluje.<br>
    <b>Faul</b> (słowo nie na P albo samo hasło): reszta krzyczy „faul!”, a zgadujący stuka pas. Pas i faul = 0 pkt.
   </div>
-  <div style="text-align:center;color:#556;font-size:12px;margin:14px 0 6px">wersja 2026-10-31 · pasek 3</div>
+  <div style="text-align:center;color:#556;font-size:12px;margin:14px 0 6px">wersja 2026-10-31 · układ 1</div>
   <div id="playBar"><div id="poolInfo"></div><button id="play">Graj</button></div>
  </div>
 </div>
@@ -1533,21 +1531,35 @@ function pool(){
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 
 /* ustawienia UI */
-let advOpen=false;
+const SEC_OF={mode:"game",time:"game",count:"game",cats:"words",lvl:"words",hintEnd:"hints",hintWord:"hints",hintSec:"hints",swap:"adv",sound:"adv"};
+const LVL_L={easy:"łatwy",medium:"średni",hard:"trudny",mixed:"mieszany"};
+const SECS=[
+ {id:"game",t:"Tryb gry",sum:s=>({time:"Na czas · "+(s.time>=120?"2 min":s.time+" s"),count:"Na liczbę haseł · "+s.count,endless:"Bez końca"})[s.mode]},
+ {id:"words",t:"Hasła",sum:s=>(s.cats.length===0?"wszystkie kategorie":s.cats.length===1?s.cats[0]:s.cats.length+" kategorie")+" · "+LVL_L[s.lvl]},
+ {id:"hints",t:"Podpowiedzi na P",sum:s=>s.mode==="time"?(s.hintEnd?"ostatnie 30 s":"wył."):(s.hintWord?"po "+s.hintSec+" s na haśle":"wył.")},
+ {id:"adv",t:"Zaawansowane",sum:s=>"strony "+(s.swap?"zamienione":"domyślne")+" · dźwięk "+(s.sound?"wł.":"wył.")}
+];
+const secOpen={game:true};
 function renderSettings(){
  const box=$("opts");box.innerHTML="";
- const adv=document.createElement("details");adv.id="adv";adv.open=advOpen;
- adv.innerHTML="<summary>Opcje zaawansowane</summary>";
- adv.addEventListener("toggle",()=>{advOpen=adv.open});
+ const bodies={};
+ for(const sc of SECS){
+  const d=document.createElement("details");d.className="sec";d.open=!!secOpen[sc.id];
+  d.innerHTML='<summary><span class="st">'+sc.t+'</span><span class="ss">'+sc.sum(S)+'</span></summary>';
+  d.addEventListener("toggle",()=>{secOpen[sc.id]=d.open});
+  const b=document.createElement("div");b.className="secbody";d.appendChild(b);
+  bodies[sc.id]=b;box.appendChild(d);
+ }
  for(const o of OPTS){
   if(o.show&&!o.show(S))continue;
+  const body=bodies[SEC_OF[o.k]];
   const g=document.createElement("div");g.className="group";
   g.innerHTML="<label>"+o.l+"</label>"+(o.hint?'<div class="hint">'+o.hint+'</div>':"");
   if(o.select){
    const sel=document.createElement("select");
    for(const [v,t] of o.o){const op=document.createElement("option");op.value=v;op.textContent=t;if(S[o.k]===v)op.selected=true;sel.appendChild(op)}
-   sel.onchange=()=>{S[o.k]=+sel.value;lsSet("pnp_settings",S)};
-   g.appendChild(sel);(o.adv?adv:box).appendChild(g);continue;
+   sel.onchange=()=>{S[o.k]=+sel.value;lsSet("pnp_settings",S);renderSettings()};
+   g.appendChild(sel);body.appendChild(g);continue;
   }
   const seg=document.createElement("div");seg.className="seg";
   if(o.multi){
@@ -1565,7 +1577,7 @@ function renderSettings(){
     };
     seg.appendChild(b);
    }
-   g.appendChild(seg);box.appendChild(g);continue;
+   g.appendChild(seg);body.appendChild(g);continue;
   }
   for(const [v,t] of o.o){
    const b=document.createElement("button");b.textContent=t;
@@ -1573,9 +1585,8 @@ function renderSettings(){
    b.onclick=()=>{S[o.k]=v;lsSet("pnp_settings",S);renderSettings()};
    seg.appendChild(b);
   }
-  g.appendChild(seg);(o.adv?adv:box).appendChild(g);
+  g.appendChild(seg);body.appendChild(g);
  }
- box.appendChild(adv);
  const okSide=S.swap?"Lewa ręka zgadującego (prawa połowa ekranu)":"Prawa ręka zgadującego (lewa połowa ekranu)";
  const pasSide=S.swap?"Prawa ręka zgadującego (lewa połowa ekranu)":"Lewa ręka zgadującego (prawa połowa ekranu)";
  $("infoOk").textContent=okSide;$("infoPas").textContent=pasSide;
