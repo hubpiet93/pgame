@@ -59,8 +59,6 @@ h1{margin:6px 0 2px;font-size:28px}
 .zone{flex:1;position:relative}
 .zone.ok{background:rgba(46,204,113,.09)}
 .zone.pas{background:rgba(255,90,90,.09)}
-.zone::before{content:attr(data-sym);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:min(46vh,30vw);opacity:.13;pointer-events:none}
-.zone.ok::before{color:#2ecc71}.zone.pas::before{color:#ff5a5a;font-size:min(30vh,20vw)}
 .bubble{position:absolute;left:50%;top:50%;width:min(52vh,38vw);height:min(52vh,38vw);margin:calc(min(52vh,38vw)/-2) 0 0 calc(min(52vh,38vw)/-2);border-radius:50%;transform:scale(.05);opacity:0;pointer-events:none;
  background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.55) 0,rgba(255,255,255,.12) 18%,rgba(255,255,255,.04) 55%,rgba(255,255,255,.1) 100%);border:3px solid rgba(255,255,255,.55);box-shadow:0 0 30px rgba(255,255,255,.25),inset 0 0 30px rgba(255,255,255,.15)}
 .zone.ok .bubble{border-color:#6dffa0;box-shadow:0 0 30px rgba(46,204,113,.5),inset 0 0 30px rgba(46,204,113,.3)}
@@ -130,7 +128,7 @@ h1{margin:6px 0 2px;font-size:28px}
    <b>Stuknij i przytrzymaj</b> pół sekundy, aż bąbelek pęknie. Puszczenie wcześniej anuluje.<br>
    <b>Faul</b> (słowo nie na P albo samo hasło): reszta krzyczy „faul!”, a zgadujący stuka pas. Pas i faul = 0 pkt.
   </div>
-  <div style="text-align:center;color:#556;font-size:12px;margin:14px 0 6px">wersja 2026-10-31 · podpowiedzi</div>
+  <div style="text-align:center;color:#556;font-size:12px;margin:14px 0 6px">wersja 2026-10-31 · podpowiedzi 2</div>
   <div id="playBar"><div id="poolInfo"></div><button id="play">Graj</button></div>
  </div>
 </div>
@@ -1503,7 +1501,7 @@ const OPTS = [
  {k:"mode",l:"Tryb",o:[["time","Na czas"],["count","Na liczbę haseł"],["endless","Bez końca"]]},
  {k:"time",l:"Czas rundy",o:[[30,"30 s"],[60,"60 s"],[90,"90 s"],[120,"2 min"]],show:s=>s.mode==="time"},
  {k:"count",l:"Liczba haseł",o:[[5,"5"],[10,"10"],[15,"15"],[20,"20"]],show:s=>s.mode==="count"},
- {k:"hints",l:"Podpowiedź na P",hint:"Działa tylko w trybie na czas: w ostatnich 30 sekundach pod hasłem pojawią się dwa słowa na P, które pomagają je zgadnąć.",o:[[false,"wył."],[true,"wł."]]},
+ {k:"hints",l:"Podpowiedź na P",hint:"Dwa słowa na P pomagające zgadnąć hasło. „Ostatnie 30 s” działa tylko w trybie na czas (w innych trybach zamienia się w „po 20 s na haśle”). „Po 20 s na haśle”: podpowiedź pojawia się, gdy to samo hasło wisi na ekranie 20 sekund, w każdym trybie.",o:[[false,"wył."],[true,"ostatnie 30 s"],["word","po 20 s na haśle"]]},
  {k:"cats",l:"Kategorie",multi:true,hint:"Możesz wybrać kilka naraz. „Wszystkie” = bez ograniczeń.",o:Object.keys(WORDS).map(c=>[c,c])},
  {k:"lvl",l:"Poziom trudności",o:[["easy","Łatwy"],["medium","Średni"],["hard","Trudny"],["mixed","Mieszany"]]},
  {k:"swap",adv:true,l:"Zamień strony",hint:"Domyślnie zgadujący stuka PRAWĄ ręką, gdy zgadł (to lewa połowa ekranu, bo telefon jest do niego odwrócony), a LEWĄ, gdy pasuje. Włącz to, jeśli zgadującemu wygodniej odwrotnie: prawa ręka = pas, lewa = zgadnięte.",o:[[false,"wył."],[true,"wł."]]},
@@ -1635,7 +1633,7 @@ function startRound(){
  let used=new Set(lsGet("pnp_used",[]));
  let fresh=p.filter(x=>!used.has(x.w));
  if(!fresh.length){p.forEach(x=>used.delete(x.w));fresh=p}
- R={queue:shuffle(fresh),used,items:[],cur:null,score:0,locked:true,ended:false,end:0,pausedAt:0,lastSec:-1,frozen:new Set(),frozenAt:0};
+ R={queue:shuffle(fresh),used,items:[],cur:null,score:0,locked:true,ended:false,end:0,pausedAt:0,lastSec:-1,frozen:new Set(),frozenAt:0,wordAt:0};
  const t=sideTexts();$("cdOk").textContent="✓ "+t.ok;$("cdPas").textContent="PAS "+t.pas;
  show("countdown");
  let n=3;$("cdNum").textContent=n;beep(600,.15);
@@ -1651,7 +1649,6 @@ function setupGame(){
  $("zL").className="zone "+(okL?"ok":"pas");$("zR").className="zone "+(okL?"pas":"ok");
  $("zL").firstChild.innerHTML=(okL?"✓ ZGADNIĘTE":"PAS")+"<small>przytrzymaj</small>";
  $("zR").firstChild.innerHTML=(okL?"PAS":"✓ ZGADNIĘTE")+"<small>przytrzymaj</small>";
- $("zL").dataset.sym=okL?"✓":"PAS";$("zR").dataset.sym=okL?"PAS":"✓";
  $("zL").firstChild.style.color=okL?"#6dffa0":"#ff8a8a";
  $("zR").firstChild.style.color=okL?"#ff8a8a":"#6dffa0";
 }
@@ -1666,7 +1663,7 @@ function beginPlay(){
 }
 function nextWord(){
  if(!R.queue.length){finish();return}
- R.cur=R.queue.shift();
+ R.cur=R.queue.shift();R.wordAt=Date.now();
  R.used.add(R.cur.w);lsSet("pnp_used",[...R.used]);
  $("meta").textContent=(S.cats.length!==1?R.cur.c+" · ":"")+LVL[R.cur.l];
  $("word").textContent=R.cur.w;
@@ -1677,7 +1674,12 @@ function nextWord(){
 }
 function showHint(){
  const el=$("hintBox");
- if(R&&R.cur&&S.mode==="time"&&S.hints&&R.end-Date.now()<=30000&&!R.pausedAt)el.textContent="💡 "+(HINTS[R.cur.w]||"");
+ let ok=false;
+ if(R&&R.cur&&S.hints&&!R.pausedAt){
+  if(S.hints===true&&S.mode==="time")ok=R.end-Date.now()<=30000;
+  else ok=Date.now()-R.wordAt>=20000;
+ }
+ if(ok)el.textContent="💡 "+(HINTS[R.cur.w]||"");
  else el.textContent="";
 }
 function fit(){
@@ -1706,7 +1708,9 @@ function updateTop(){
 function freeze(r){if(!R.frozen.size)R.frozenAt=Date.now();R.frozen.add(r)}
 function unfreeze(r){
  if(!R.frozen.delete(r)||R.frozen.size)return;
- if(S.mode==="time")R.end+=Date.now()-R.frozenAt;
+ const d=Date.now()-R.frozenAt;
+ if(S.mode==="time")R.end+=d;
+ R.wordAt+=d;
  R.frozenAt=0;
 }
 function tick(){
@@ -1716,8 +1720,9 @@ function tick(){
   if(left<=0){finish();return}
   const sec=Math.ceil(left/1000);
   if(sec<=5&&sec!==R.lastSec){R.lastSec=sec;beep(750,.12,"square")}
-  updateTop();showHint();
+  updateTop();
  }
+ showHint();
 }
 function answer(ok){
  if(!R||R.locked||R.ended||R.pausedAt||!R.cur)return;
