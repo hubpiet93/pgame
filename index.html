@@ -21,6 +21,7 @@ h1{margin:6px 0 2px;font-size:28px}
 .sub{color:#9aa3b5;margin:0 0 14px;font-size:14px}
 .group{margin:14px 0}
 .group label{display:block;font-size:13px;color:#9aa3b5;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
+.hint{font-size:13px;color:#8892a6;line-height:1.4;margin:-2px 0 8px}
 .seg{display:flex;flex-wrap:wrap;gap:6px}
 .seg button{background:#1a1f2b;padding:10px 14px;border-radius:10px;font-size:15px;border:2px solid transparent}
 .seg button.sel{background:#2b3a66;border-color:#6f8cff}
@@ -135,46 +136,86 @@ h1{margin:6px 0 2px;font-size:28px}
 <script>
 const WORDS = {
  "Zwierzęta": {
-  easy: ["kot","pies","koń","krowa","świnia","kura","ryba","żaba","mysz","słoń","lew","zebra","małpa","owca"],
-  medium: ["wiewiórka","jeż","żyrafa","krokodyl","pingwin","delfin","nietoperz","bocian","łabędź","kangur","papuga","tygrys","wilk","niedźwiedź"],
-  hard: ["dziobak","aksolotl","mrówkojad","leniwiec","ryjówka","pancernik","kameleon","pustułka","ośmiornica","hipopotam","koliber","borsuk","łoś","jenot"]
+  easy: ["kot","pies","koń","krowa","świnia","kura","ryba","żaba","mysz","słoń","lew","zebra","małpa","owca","kaczka","gołąb","żółw","królik","koza","gęś"],
+  medium: ["wiewiórka","jeż","żyrafa","krokodyl","pingwin","delfin","nietoperz","bocian","łabędź","kangur","papuga","tygrys","wilk","niedźwiedź","sowa","orzeł","rekin","wieloryb","foka","struś"],
+  hard: ["dziobak","aksolotl","mrówkojad","leniwiec","ryjówka","pancernik","kameleon","pustułka","ośmiornica","hipopotam","koliber","borsuk","łoś","jenot","surykatka","lemur","tapir","mors","nandu","szynszyla"]
  },
  "Jedzenie": {
-  easy: ["chleb","masło","ser","jajko","mleko","jabłko","banan","zupa","pizza","ciastko","czekolada","frytki","kanapka","lody"],
-  medium: ["pierogi","kotlet schabowy","naleśniki","bigos","żurek","szarlotka","makaron","ogórek kiszony","racuchy","gołąbki","sernik","kiełbasa","rosół","tosty"],
-  hard: ["tiramisu","ratatuj","gazpacho","karpaccio","fondue","risotto","bruschetta","guacamole","majeranek","kisiel","oscypek","tatar","pasztet","żurawina"]
+  easy: ["chleb","masło","ser","jajko","mleko","jabłko","banan","zupa","pizza","ciastko","czekolada","frytki","kanapka","lody","kawa","herbata","sok","woda","pomidor","ziemniak"],
+  medium: ["pierogi","kotlet schabowy","naleśniki","bigos","żurek","szarlotka","makaron","ogórek kiszony","racuchy","gołąbki","sernik","kiełbasa","rosół","tosty","pączek","barszcz","kopytka","śledź","placki ziemniaczane","budyń"],
+  hard: ["tiramisu","ratatuj","gazpacho","karpaccio","fondue","risotto","bruschetta","guacamole","majeranek","kisiel","oscypek","tatar","pasztet","żurawina","sałatka jarzynowa","łosoś","polędwica","parmezan","pieczarki","pistacje"]
  },
  "Zawody": {
-  easy: ["lekarz","nauczyciel","policjant","kucharz","strażak","kierowca","fryzjer","listonosz","sprzedawca","pielęgniarka","rolnik","piekarz","malarz","dentysta"],
-  medium: ["hydraulik","elektryk","księgowy","architekt","dziennikarz","weterynarz","stolarz","ratownik","tłumacz","programista","piłkarz","fotograf","aktor","pilot"],
-  hard: ["sommelier","notariusz","geodeta","kominiarz","kartograf","lutnik","rzeźbiarz","ornitolog","farmaceuta","żongler","iluzjonista","rzeczoznawca","syndyk","kamerdyner"]
+  easy: ["lekarz","nauczyciel","policjant","kucharz","strażak","kierowca","fryzjer","listonosz","sprzedawca","pielęgniarka","rolnik","piekarz","malarz","dentysta","sekretarka","kelner","górnik","żołnierz","murarz","mechanik"],
+  medium: ["hydraulik","elektryk","księgowy","architekt","dziennikarz","weterynarz","stolarz","ratownik","tłumacz","programista","piłkarz","fotograf","aktor","pilot","prawnik","psycholog","stewardesa","ochroniarz","kurier","trener"],
+  hard: ["sommelier","notariusz","geodeta","kominiarz","kartograf","lutnik","rzeźbiarz","ornitolog","farmaceuta","żongler","iluzjonista","rzeczoznawca","syndyk","kamerdyner","grafik","prokurator","perfumiarz","pszczelarz","spawacz","projektant"]
  },
  "Przedmioty": {
-  easy: ["krzesło","stół","łóżko","lampa","telefon","kubek","talerz","klucz","zegarek","parasol","okulary","plecak","książka","telewizor"],
-  medium: ["odkurzacz","suszarka do włosów","żelazko","lodówka","czajnik","ładowarka","gitara","rower","hulajnoga","szczoteczka do zębów","nożyczki","młotek","latarka","pralka"],
-  hard: ["klepsydra","zszywacz","śrubokręt","teleskop","mikroskop","kalejdoskop","gramofon","barometr","szpulka","wahadło","kałamarz","imadło","cyrkiel","lornetka"]
+  easy: ["krzesło","stół","łóżko","lampa","telefon","kubek","talerz","klucz","zegarek","parasol","okulary","plecak","książka","telewizor","łyżka","widelec","nóż","poduszka","szafa","drzwi"],
+  medium: ["odkurzacz","suszarka do włosów","żelazko","lodówka","czajnik","ładowarka","gitara","rower","hulajnoga","szczoteczka do zębów","nożyczki","młotek","latarka","pralka","garnek","szczotka","kołdra","zasłona","wieszak","lustro"],
+  hard: ["klepsydra","zszywacz","śrubokręt","teleskop","mikroskop","kalejdoskop","gramofon","barometr","szpulka","wahadło","kałamarz","imadło","cyrkiel","lornetka","szpilka","korkociąg","otwieracz do puszek","wiertarka","kłódka","magnes"]
  },
  "Miejsca": {
-  easy: ["szkoła","dom","sklep","kościół","szpital","plaża","las","góry","park","kino","dworzec","lotnisko","basen","restauracja"],
-  medium: ["biblioteka","cmentarz","muzeum","stacja benzynowa","pralnia","zoo","wesołe miasteczko","Zakopane","Kraków","Morze Bałtyckie","Tatry","Warszawa","port","Mazury"],
-  hard: ["obserwatorium","planetarium","katakumby","bunkier","latarnia morska","oranżeria","kopalnia","Antarktyda","Sahara","Wawel","Wieliczka","amfiteatr","klasztor","Kreml"]
+  easy: ["szkoła","dom","sklep","kościół","szpital","plaża","las","góry","park","kino","dworzec","lotnisko","basen","restauracja","zamek","wieś","miasto","ulica","rynek","więzienie"],
+  medium: ["biblioteka","cmentarz","muzeum","stacja benzynowa","pralnia","zoo","wesołe miasteczko","Zakopane","Kraków","Morze Bałtyckie","Tatry","Warszawa","port","Mazury","cyrk","stadion","łazienka","kuchnia","strych","piwnica"],
+  hard: ["obserwatorium","planetarium","katakumby","bunkier","latarnia morska","oranżeria","kopalnia","Antarktyda","Sahara","Wawel","Wieliczka","amfiteatr","klasztor","Kreml","pustynia","wulkan","jaskinia","delta","tundra","atol"]
  },
  "Sport i rozrywka": {
-  easy: ["piłka nożna","koszykówka","siatkówka","pływanie","bieganie","narty","jazda na rowerze","kino","teatr","koncert","taniec","karty","szachy","bilard"],
-  medium: ["tenis","boks","łyżwiarstwo","skoki narciarskie","wspinaczka","karaoke","bowling","sztuki walki","joga","paintball","żeglarstwo","golf","szermierka","jazda konna"],
-  hard: ["curling","biathlon","lacrosse","pięciobój","rugby","badminton","parkour","snowboard","windsurfing","kajakarstwo","esport","cyrk","stand-up","escape room"]
+  easy: ["piłka nożna","koszykówka","siatkówka","pływanie","bieganie","narty","jazda na rowerze","kino","teatr","koncert","taniec","karty","szachy","bilard","hokej","siłownia","planszówki","wędkowanie","grill","dyskoteka"],
+  medium: ["tenis","boks","łyżwiarstwo","skoki narciarskie","wspinaczka","karaoke","bowling","sztuki walki","joga","paintball","żeglarstwo","golf","szermierka","jazda konna","siatkówka plażowa","kolarstwo","gimnastyka","kajaki","narty biegowe","zapasy"],
+  hard: ["curling","biathlon","lacrosse","pięciobój","rugby","badminton","parkour","snowboard","windsurfing","kajakarstwo","esport","cyrk","stand-up","escape room","wioślarstwo","triathlon","rzut oszczepem","skok o tyczce","pływanie synchroniczne","polo"]
+ },
+ "Ubrania": {
+  easy: ["koszula","spodnie","sukienka","buty","czapka","szalik","skarpetki","kurtka","bluza","rękawiczki","spódnica","sweter","dżinsy","krawat"],
+  medium: ["marynarka","szlafrok","kalosze","kombinezon","fartuch","piżama","kapelusz","szorty","trampki","kamizelka","płaszcz","pasek","klapki","bielizna"],
+  hard: ["gorset","kimono","toga","smoking","welon","kilt","beret","poncho","frak","turban","kożuch","mokasyny","kamasze","sombrero"]
+ },
+ "Transport": {
+  easy: ["samochód","autobus","tramwaj","pociąg","samolot","rower","statek","motocykl","taksówka","karetka","ciężarówka","hulajnoga","metro","łódź"],
+  medium: ["helikopter","traktor","laweta","kolejka linowa","żaglówka","wóz strażacki","kajak","skuter","riksza","dźwig","koparka","balon","prom","autokar"],
+  hard: ["sterowiec","batyskaf","amfibia","dorożka","lokomotywa","szybowiec","katamaran","śmigłowiec","bryczka","drezyna","bobsleje","saneczki","trolejbus","zeppelin"]
+ },
+ "Natura": {
+  easy: ["drzewo","kwiat","trawa","deszcz","śnieg","słońce","księżyc","gwiazda","chmura","rzeka","jezioro","morze","wiatr","tęcza"],
+  medium: ["burza","mgła","wodospad","błyskawica","grzyb","mech","szyszka","żołądź","kamień","piasek","lawina","wydma","lód","rosa"],
+  hard: ["tornado","huragan","zorza polarna","tsunami","ekosystem","fotosynteza","erozja","stalaktyt","gejzer","lodowiec","zaćmienie","kometa","mgławica","trzęsienie ziemi"]
+ },
+ "Filmy i bajki": {
+  easy: ["Kopciuszek","Shrek","Batman","Spider-Man","Grinch","Smerfy","Kubuś Puchatek","Czerwony Kapturek","Królewna Śnieżka","Harry Potter","Elsa","Myszka Miki","Superman","Dzwoneczek"],
+  medium: ["Gandalf","Darth Vader","Wiedźmin","Jaś i Małgosia","Kot w butach","Rumcajs","Bolek i Lolek","Reksio","Gru","Simba","Jack Sparrow","Indiana Jones","Terminator","Titanic"],
+  hard: ["Matrix","Gladiator","Władca Pierścieni","Forrest Gump","Incepcja","Gwiezdne wojny","Seksmisja","Rejs","Vabank","Kler","Kingsajz","Znachor","Bogowie","Hobbit"]
+ },
+ "Szkoła i nauka": {
+  easy: ["tablica","zeszyt","długopis","ołówek","gumka","linijka","plecak","lekcja","dzwonek","klasa","matematyka","historia","wuef","biologia"],
+  medium: ["sprawdzian","kartkówka","świadectwo","matura","dziennik","ściąga","wakacje","korepetycje","ławka","internat","chemia","geografia","fizyka","egzamin"],
+  hard: ["logarytm","ułamek","pierwiastek","hipoteza","laboratorium","doktorat","kolokwium","dziekanat","absolutorium","wykład","encyklopedia","semestr","stypendium","seminarium"]
+ },
+ "Święta i tradycje": {
+  easy: ["choinka","prezent","Wigilia","opłatek","bałwan","Wielkanoc","święconka","zajączek","urodziny","tort","świeczki","fajerwerki","sylwester","wesele"],
+  medium: ["karp","makowiec","kutia","śmigus-dyngus","Boże Ciało","Andrzejki","tłusty czwartek","dożynki","wianek","walentynki","Halloween","topienie Marzanny","orszak","chrzciny"],
+  hard: ["Zaduszki","Ramadan","Diwali","karnawał","kulig","jasełka","szopka","komunia","bierzmowanie","Nowy Rok","noc Kupały","sobótka","oczepiny","mikołajki"]
+ },
+ "Państwa i miasta": {
+  easy: ["Czechy","Niemcy","Francja","Włochy","Hiszpania","Anglia","Rosja","USA","Chiny","Japonia","Egipt","Grecja","Gdańsk","Wrocław"],
+  medium: ["Brazylia","Australia","Kanada","Meksyk","Islandia","Szwajcaria","Turcja","Londyn","Wiedeń","Nowy Jork","Rzym","Barcelona","Amsterdam","Berlin"],
+  hard: ["Madagaskar","Nepal","Kuba","Tybet","Mongolia","Maroko","Kenia","Argentyna","Wenecja","Dubaj","Stambuł","Ateny","Lizbona","Singapur"]
+ },
+ "Technologia": {
+  easy: ["komputer","smartfon","internet","klawiatura","myszka","laptop","ekran","wifi","aparat","słuchawki","bateria","gra","film","zdjęcie"],
+  medium: ["aplikacja","wirus","haker","skaner","router","meme","streaming","selfie","chmura","ekran dotykowy","czat","emotikon","bluetooth","hasło"],
+  hard: ["algorytm","sztuczna inteligencja","kryptowaluta","blockchain","serwer","firewall","mikroprocesor","wirtualna rzeczywistość","dron","robot","hologram","cyberprzestrzeń","kod źródłowy","satelita"]
  }
 };
 const LVL = {easy:"Łatwy",medium:"Średni",hard:"Trudny"};
 
-const DEF = {mode:"time",time:60,count:10,cat:"Wszystkie",lvl:"mixed",swap:false,sound:true};
+const DEF = {mode:"time",time:60,count:10,cats:[],lvl:"mixed",swap:false,sound:true};
 const OPTS = [
  {k:"mode",l:"Tryb",o:[["time","Na czas"],["count","Na liczbę haseł"],["endless","Bez końca"]]},
  {k:"time",l:"Czas rundy",o:[[30,"30 s"],[60,"60 s"],[90,"90 s"],[120,"2 min"]],show:s=>s.mode==="time"},
  {k:"count",l:"Liczba haseł",o:[[5,"5"],[10,"10"],[15,"15"],[20,"20"]],show:s=>s.mode==="count"},
- {k:"cat",l:"Kategoria",o:[["Wszystkie","Wszystkie"],...Object.keys(WORDS).map(c=>[c,c])]},
+ {k:"cats",l:"Kategorie",multi:true,hint:"Możesz wybrać kilka naraz. „Wszystkie” = bez ograniczeń.",o:Object.keys(WORDS).map(c=>[c,c])},
  {k:"lvl",l:"Poziom trudności",o:[["easy","Łatwy"],["medium","Średni"],["hard","Trudny"],["mixed","Mieszany"]]},
- {k:"swap",l:"Zamień strony",o:[[false,"wył."],[true,"wł."]]},
+ {k:"swap",l:"Zamień strony",hint:"Domyślnie zgadujący stuka PRAWĄ ręką, gdy zgadł (to lewa połowa ekranu, bo telefon jest do niego odwrócony), a LEWĄ, gdy pasuje. Włącz to, jeśli zgadującemu wygodniej odwrotnie: prawa ręka = pas, lewa = zgadnięte.",o:[[false,"wył."],[true,"wł."]]},
  {k:"sound",l:"Dźwięki",o:[[true,"wł."],[false,"wył."]]}
 ];
 
@@ -183,7 +224,9 @@ function lsGet(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d
 function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 
 let S = Object.assign({},DEF,lsGet("pnp_settings",{}));
-if(!OPTS.every(o=>o.o.some(x=>x[0]===S[o.k]))) S=Object.assign({},DEF);
+{const old=lsGet("pnp_settings",{});if(typeof old.cat==="string"&&!old.cats)S.cats=old.cat==="Wszystkie"?[]:[old.cat];}
+S.cats=Array.isArray(S.cats)?S.cats.filter(c=>WORDS[c]):[];
+if(!OPTS.every(o=>o.multi||o.o.some(x=>x[0]===S[o.k]))){const c=S.cats;S=Object.assign({},DEF);S.cats=c}
 
 function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("on",s.id===id))}
 
@@ -191,7 +234,7 @@ function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.to
 function pool(){
  const p=[];
  for(const c in WORDS){
-  if(S.cat!=="Wszystkie"&&S.cat!==c)continue;
+  if(S.cats.length&&!S.cats.includes(c))continue;
   for(const l in WORDS[c]){
    if(S.lvl!=="mixed"&&S.lvl!==l)continue;
    for(const w of WORDS[c][l])p.push({w,c,l});
@@ -207,8 +250,25 @@ function renderSettings(){
  for(const o of OPTS){
   if(o.show&&!o.show(S))continue;
   const g=document.createElement("div");g.className="group";
-  g.innerHTML="<label>"+o.l+"</label>";
+  g.innerHTML="<label>"+o.l+"</label>"+(o.hint?'<div class="hint">'+o.hint+'</div>':"");
   const seg=document.createElement("div");seg.className="seg";
+  if(o.multi){
+   const all=document.createElement("button");all.textContent="Wszystkie";
+   if(!S.cats.length)all.className="sel";
+   all.onclick=()=>{S.cats=[];lsSet("pnp_settings",S);renderSettings()};
+   seg.appendChild(all);
+   for(const [v,t] of o.o){
+    const b=document.createElement("button");b.textContent=t;
+    if(S.cats.includes(v))b.className="sel";
+    b.onclick=()=>{
+     S.cats=S.cats.includes(v)?S.cats.filter(x=>x!==v):[...S.cats,v];
+     if(S.cats.length===o.o.length)S.cats=[];
+     lsSet("pnp_settings",S);renderSettings();
+    };
+    seg.appendChild(b);
+   }
+   g.appendChild(seg);box.appendChild(g);continue;
+  }
   for(const [v,t] of o.o){
    const b=document.createElement("button");b.textContent=t;
    if(S[o.k]===v)b.className="sel";
@@ -299,7 +359,7 @@ function nextWord(){
  if(!R.queue.length){finish();return}
  R.cur=R.queue.shift();
  R.used.add(R.cur.w);lsSet("pnp_used",[...R.used]);
- $("meta").textContent=(S.cat==="Wszystkie"?R.cur.c+" · ":"")+LVL[R.cur.l];
+ $("meta").textContent=(S.cats.length!==1?R.cur.c+" · ":"")+LVL[R.cur.l];
  $("word").textContent=R.cur.w;
  $("wordBox").style.visibility="visible";
  fit();
