@@ -26,6 +26,15 @@ h1{margin:6px 0 2px;font-size:28px}
 .sub{color:#9aa3b5;margin:0 0 14px;font-size:14px}
 .group{margin:14px 0}
 .group label{display:block;font-size:13px;color:#9aa3b5;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
+.gamepick{display:flex;gap:8px;margin:12px 0 4px}
+.gamepick button{flex:1;background:#1a1f2b;border:2px solid transparent;border-radius:12px;padding:12px 8px;display:flex;flex-direction:column;gap:2px;font-size:16px}
+.gamepick button small{color:#8892a6;font-size:12px}
+.gamepick button.sel{background:#2b3a66;border-color:#6f8cff}
+#tabuBox{display:none;flex-wrap:wrap;justify-content:center;gap:6px 8px;margin-top:10px}
+#game.tabu #tabuBox{display:flex}
+#game.tabu #reminder,#game.tabu #hintBox{display:none}
+#tabuBox .tb{background:rgba(255,70,70,.16);border:2px solid #ff5a5a;color:#ffb4b4;font-weight:800;border-radius:10px;padding:3px 12px;font-size:clamp(14px,min(4.4vw,7.5vh),32px)}
+#tabuBox .tn{flex-basis:100%;color:#8892a6;font-size:clamp(10px,min(2.8vw,4vh),15px)}
 .sec{margin:10px 0;background:#141926;border-radius:14px;padding:0 14px}
 .sec summary{cursor:pointer;padding:14px 0;list-style:none;display:flex;align-items:center;gap:10px}
 .sec summary::-webkit-details-marker{display:none}
@@ -117,18 +126,12 @@ h1{margin:6px 0 2px;font-size:28px}
 
 <div id="settings" class="screen on">
  <div class="wrap">
-  <h1>Czółko na P</h1>
-  <p class="sub">Zgadujący trzyma telefon na czole. Reszta podpowiada tylko słowami na P.</p>
+  <h1 id="h1">Czółko na P</h1>
+  <p class="sub" id="sub">Zgadujący trzyma telefon na czole. Reszta podpowiada tylko słowami na P.</p>
   <details class="info" id="installHint" style="display:none"><summary><b>Pełny ekran bez paska adresu</b></summary><div style="margin-top:8px">W przeglądarce telefonu otwórz menu <b>Udostępnij</b> (iPhone) lub <b>⋮</b> (Android) → <b>Do ekranu początkowego</b>, a potem uruchamiaj grę z ikony „Czółko na P”. Z samej przeglądarki iPhone nie pozwala ukryć paska.</div></details>
   <div id="opts"></div>
-  <div class="info">
-   <b>Jak grać:</b> zgadujący trzyma telefon przy czole ekranem na zewnątrz i stuka na ślepo.<br>
-   <b id="infoOk">Prawa ręka zgadującego (lewa połowa ekranu)</b> = zgadnięte.<br>
-   <b id="infoPas">Lewa ręka zgadującego (prawa połowa ekranu)</b> = pas.<br>
-   <b>Przytrzymaj</b> palec na wybranej połowie ekranu, aż cała się wypełni kolorem. Puszczenie wcześniej anuluje.<br>
-   <b>Faul</b> (słowo nie na P albo samo hasło): reszta krzyczy „faul!”, a zgadujący stuka pas. Pas i faul = 0 pkt.
-  </div>
-  <div style="text-align:center;color:#556;font-size:12px;margin:14px 0 6px">wersja 2026-10-31 · układ 5</div>
+  <div class="info" id="howto"></div>
+  <div style="text-align:center;color:#556;font-size:12px;margin:14px 0 6px">wersja 2026-11-07 · tabu 1</div>
   <div id="playBar"><div id="poolInfo"></div><button id="play">Graj</button></div>
  </div>
 </div>
@@ -149,6 +152,7 @@ h1{margin:6px 0 2px;font-size:28px}
   <div id="word"></div>
   <div id="reminder">Tylko słowa na P!</div>
   <div id="hintBox"></div>
+  <div id="tabuBox"></div>
  </div>
  <div id="bar">
   <div id="score">✓ 0</div>
@@ -1494,20 +1498,44 @@ const HINTS = {"kot":"pazury · pręgowany",
 "światłowód":"prędkość · połączenie",
 "nanotechnologia":"przyszłość · precyzja",
 "komputer kwantowy":"przyszłość · potężny"};
+/* tabu na postacie: [postać, zakazane1, zakazane2, zakazane3] */
+const TABU = {
+ "Polscy celebryci": {
+  easy: [["Robert Lewandowski","piłka","bramka","Barcelona"],["Adam Małysz","skoki","narty","orzeł"],["Jan Paweł II","papież","Wadowice","Watykan"],["Lech Wałęsa","Solidarność","prezydent","Gdańsk"],["Donald Tusk","premier","polityk","Platforma"],["Andrzej Duda","prezydent","polityk","Kraków"],["Kuba Wojewódzki","talk-show","prezenter","TVN"],["Doda","piosenkarka","Rabczewska","gwiazda"],["Małgorzata Rozenek","perfekcyjna","prezenterka","gospodyni"],["Robert Kubica","Formuła","kierowca","wypadek"],["Iga Świątek","tenis","Roland","rakieta"],["Kamil Stoch","skoki","narty","Zakopane"],["Justyna Kowalczyk","biegi","narty","Tour"],["Marcin Gortat","koszykówka","NBA","wysoki"],["Edyta Górniak","piosenkarka","Eurowizja","diva"],["Zenek Martyniuk","disco polo","Akcent","piosenkarz"],["Mariusz Pudzianowski","siłacz","strongman","MMA"]],
+  medium: [["Anja Rubik","modelka","wybieg","fundacja"],["Maryla Rodowicz","piosenkarka","Małgośka","Opole"],["Krzysztof Krawczyk","piosenkarz","Parostatek","estrada"],["Roman Polański","reżyser","Pianista","Hollywood"],["Andrzej Wajda","reżyser","Oscar","Popiół"],["Wojciech Szczęsny","bramkarz","Juventus","Arsenal"],["Agnieszka Radwańska","tenis","Wimbledon","Kraków"],["Otylia Jędrzejczak","pływaczka","motyl","olimpiada"],["Anita Włodarczyk","młot","rzut","rekord"],["Dawid Podsiadło","piosenkarz","X Factor","Malomalo"],["Michał Wiśniewski","Ich Troje","piosenkarz","Mandaryna"],["Szymon Hołownia","polityk","dziennikarz","Mam Talent"],["Magda Gessler","restauracje","kucharka","Kuchenne rewolucje"],["Wojciech Cejrowski","podróżnik","Boso","kapelusz"],["Jerzy Owsiak","Orkiestra","Woodstock","serduszko"],["Zbigniew Boniek","piłkarz","Juventus","prezes"],["Cezary Pazura","aktor","Kiler","komedia"]],
+  hard: [["Czesław Niemen","piosenkarz","Dziwny","Sen"],["Andrzej Gołota","bokser","Tyson","ring"],["Tomasz Adamek","bokser","Góral","ring"],["Jerzy Dudek","bramkarz","Liverpool","Stambuł"],["Kazimierz Deyna","piłkarz","Legia","Manchester"],["Grzegorz Lato","piłkarz","Mundial","król strzelców"],["Irena Szewińska","lekkoatletka","sprinterka","medale"],["Agnieszka Holland","reżyserka","Europa","film"],["Krzysztof Kieślowski","reżyser","Dekalog","Trzy kolory"],["Krzysztof Penderecki","kompozytor","orkiestra","Hiroszima"],["Wisława Szymborska","poetka","Nobel","wiersz"],["Olga Tokarczuk","pisarka","Nobel","Bieguni"],["Henryk Sienkiewicz","pisarz","Quo vadis","Nobel"],["Stanisław Lem","pisarz","Solaris","fantastyka"],["Zbigniew Cybulski","aktor","Popiół i diament","okulary"],["Artur Boruc","bramkarz","Celtic","Legia"],["Wojciech Fortuna","skoczek","Sapporo","złoto"]]
+ },
+ "Światowe gwiazdy": {
+  easy: [["Cristiano Ronaldo","piłkarz","Portugalia","Real"],["Lionel Messi","piłkarz","Argentyna","Barcelona"],["Michael Jackson","król popu","moonwalk","rękawiczka"],["Madonna","piosenkarka","królowa popu","Like a Virgin"],["Elvis Presley","król rock'n'rolla","Memphis","Las Vegas"],["Beyoncé","piosenkarka","Jay-Z","Destiny's Child"],["Taylor Swift","piosenkarka","country","Grammy"],["Leonardo DiCaprio","aktor","Titanic","Oscar"],["Tom Cruise","aktor","Mission Impossible","Top Gun"],["Brad Pitt","aktor","Angelina","Hollywood"],["Angelina Jolie","aktorka","Lara Croft","Brad"],["Elon Musk","Tesla","SpaceX","miliarder"],["Bill Gates","Microsoft","miliarder","komputery"],["Mark Zuckerberg","Facebook","Meta","portal"],["Steve Jobs","Apple","iPhone","Mac"],["Barack Obama","prezydent","USA","Biały Dom"],["Lady Gaga","piosenkarka","kostiumy","Poker Face"]],
+  medium: [["Johnny Depp","aktor","Piraci z Karaibów","Jack Sparrow"],["Will Smith","aktor","Oscar","Książę z Bel-Air"],["Arnold Schwarzenegger","aktor","Terminator","gubernator"],["Sylvester Stallone","aktor","Rocky","Rambo"],["Keanu Reeves","aktor","Matrix","John Wick"],["Robert Downey Jr.","aktor","Iron Man","Avengers"],["Scarlett Johansson","aktorka","Czarna Wdowa","Avengers"],["Jennifer Lopez","piosenkarka","aktorka","Bronx"],["Shakira","piosenkarka","Kolumbia","biodra"],["Eminem","raper","Detroit","Slim Shady"],["Ed Sheeran","piosenkarz","gitara","Shape of You"],["Adele","piosenkarka","Hello","Londyn"],["Lewis Hamilton","Formuła 1","kierowca","Mercedes"],["Michael Schumacher","Formuła 1","Ferrari","kierowca"],["Usain Bolt","sprinter","Jamajka","100 metrów"],["Michael Jordan","koszykarz","Bulls","NBA"],["Serena Williams","tenisistka","Wimbledon","siostra Venus"]],
+  hard: [["Quentin Tarantino","reżyser","Pulp Fiction","Kill Bill"],["Steven Spielberg","reżyser","Szczęki","E.T."],["Christopher Nolan","reżyser","Incepcja","Batman"],["Hans Zimmer","kompozytor","muzyka filmowa","Hollywood"],["Freddie Mercury","wokalista","Queen","wąsy"],["David Bowie","piosenkarz","Ziggy Stardust","Major Tom"],["Bob Marley","reggae","Jamajka","dredy"],["Elton John","piosenkarz","okulary","Candle in the Wind"],["Paul McCartney","Beatles","gitarzysta","Wings"],["John Lennon","Beatles","Imagine","Yoko Ono"],["Marilyn Monroe","aktorka","blondynka","Kennedy"],["Audrey Hepburn","aktorka","Śniadanie u Tiffany'ego","Hollywood"],["Charlie Chaplin","komik","melonik","kino niemie"],["Jackie Chan","aktor","kung-fu","Hongkong"],["Bruce Lee","kung-fu","Hongkong","aktor"],["Gordon Ramsay","kucharz","piekło","Kuchenne koszmary"],["Diego Maradona","piłkarz","Argentyna","Ręka Boga"]]
+ },
+ "Postacie historyczne": {
+  easy: [["Mikołaj Kopernik","astronom","Słońce","Toruń"],["Fryderyk Chopin","kompozytor","pianista","Żelazowa Wola"],["Maria Skłodowska-Curie","Nobel","rad","polon"],["Napoleon Bonaparte","cesarz","Francja","Waterloo"],["Juliusz Cezar","Rzym","Brutus","dyktator"],["Kleopatra","Egipt","królowa","Antoniusz"],["Krzysztof Kolumb","Ameryka","odkrywca","statki"],["Albert Einstein","fizyk","względność","Nobel"],["Adolf Hitler","Niemcy","wojna","nazizm"],["Józef Piłsudski","marszałek","Legiony","Naczelnik"],["Aleksander Wielki","Macedonia","Persja","podbój"],["Leonardo da Vinci","Mona Lisa","malarz","wynalazca"],["Bolesław Chrobry","król","Gniezno","Polska"],["Kazimierz Wielki","król","Kraków","Akademia"],["Jan III Sobieski","Wiedeń","król","husaria"],["Winston Churchill","premier","Wielka Brytania","cygaro"],["Mahatma Gandhi","Indie","pokój","strajk głodowy"]],
+  medium: [["Ludwig van Beethoven","kompozytor","głuchy","Symfonia"],["Wolfgang Amadeus Mozart","kompozytor","Salzburg","cudowne dziecko"],["William Szekspir","dramaturg","Hamlet","Romeo"],["Isaac Newton","jabłko","grawitacja","fizyk"],["Galileusz","teleskop","Inkwizycja","astronom"],["Karol Darwin","ewolucja","Beagle","gatunki"],["Zygmunt Freud","psychoanaliza","sny","Wiedeń"],["Nikola Tesla","prąd","wynalazca","Serbia"],["Thomas Edison","żarówka","wynalazca","fonograf"],["Pablo Picasso","malarz","kubizm","Guernica"],["Vincent van Gogh","malarz","ucho","Słoneczniki"],["Michał Anioł","rzeźbiarz","Dawid","Kaplica Sykstyńska"],["Martin Luther King","prawa obywatelskie","marzenie","Nobel"],["Nelson Mandela","RPA","więzień","prezydent"],["Che Guevara","Kuba","rewolucja","Castro"],["Józef Stalin","ZSRR","dyktator","Gruzja"],["Joanna d'Arc","Francja","stos","Orlean"]],
+  hard: [["Pitagoras","twierdzenie","trójkąt","Grecja"],["Archimedes","Eureka","wanna","dźwignia"],["Sokrates","filozof","cykuta","Ateny"],["Arystoteles","filozof","Platon","Aleksander"],["Hannibal","Kartagina","słonie","Alpy"],["Attyla","Hunowie","Bicz Boży","najeźdźca"],["Dżyngis-chan","Mongołowie","imperium","podbój"],["Marco Polo","podróżnik","Chiny","Wenecja"],["Vasco da Gama","Indie","żeglarz","Portugalia"],["Ferdynand Magellan","opłynięcie","Filipiny","żeglarz"],["Jan Gutenberg","druk","Biblia","prasa"],["Marcin Luter","reformacja","Wittenberg","tezy"],["Tadeusz Kościuszko","Racławice","kosynierzy","Ameryka"],["Ignacy Łukasiewicz","lampa naftowa","nafta","Lwów"],["Jan Matejko","malarz","Grunwald","obraz"],["Stanisław Wyspiański","Wesele","malarz","Kraków"],["Ignacy Paderewski","pianista","premier","Wersal"]]
+ },
+ "Postacie fikcyjne": {
+  easy: [["Harry Potter","czarodziej","Hogwart","blizna"],["Shrek","ogr","bagno","Osioł"],["Kubuś Puchatek","miś","miód","Prosiaczek"],["Myszka Miki","Disney","mysz","Minnie"],["Kopciuszek","pantofelek","bal","macocha"],["Batman","Gotham","nietoperz","Joker"],["Spider-Man","pająk","Marvel","sieć"],["Superman","Krypton","peleryna","Clark Kent"],["Pikachu","Pokémon","żółty","elektryczny"],["Super Mario","hydraulik","Nintendo","grzyb"],["Elsa","Kraina Lodu","lód","Anna"],["Simba","lew","Król Lew","Mufasa"],["Dzwoneczek","wróżka","Piotruś Pan","Nibylandia"],["Czerwony Kapturek","wilk","babcia","koszyk"],["Królewna Śnieżka","krasnoludki","jabłko","macocha"],["Pinokio","nos","drewniany","kłamstwo"],["Sherlock Holmes","detektyw","Watson","Baker Street"]],
+  medium: [["Gandalf","czarodziej","Hobbit","Władca Pierścieni"],["Darth Vader","Gwiezdne wojny","Imperium","maska"],["Yoda","Jedi","mistrz","zielony"],["James Bond","007","agent","martini"],["Indiana Jones","archeolog","bicz","kapelusz"],["Jack Sparrow","pirat","Karaiby","rum"],["Terminator","robot","cyborg","Arnold"],["Geralt z Rivii","wiedźmin","miecz","potwory"],["Lara Croft","Tomb Raider","archeolożka","gra"],["Sonic","jeż","niebieski","Sega"],["Homer Simpson","Springfield","pączki","Marge"],["Asterix","Galia","Obelix","wioska"],["Hannibal Lecter","psychiatra","kanibal","Milczenie owiec"],["Forrest Gump","pudełko czekoladek","biegnie","Alabama"],["Rocky Balboa","bokser","Filadelfia","schody"],["Mufasa","lew","Król Lew","Simba"]],
+  hard: [["Gollum","pierścień","skarb","Hobbit"],["Dobby","skrzat","Harry Potter","skarpetka"],["Hermiona Granger","Hogwart","czarownica","Harry Potter"],["Severus Snape","Hogwart","eliksiry","profesor"],["Chewbacca","Wookiee","Han Solo","Gwiezdne wojny"],["Jon Snow","Zima","Gra o tron","Westeros"],["Daenerys Targaryen","smoki","Gra o tron","królowa"],["Walter White","Breaking Bad","chemia","Heisenberg"],["Joker","Batman","Gotham","śmiech"],["Gru","Minionki","złoczyńca","Księżyc"],["Zorro","maska","szpada","Meksyk"],["Don Kichot","wiatraki","Sancho","rycerz"],["Robinson Crusoe","wyspa","Piętaszek","rozbitek"],["Kapitan Nemo","Nautilus","Verne","okręt podwodny"],["Pippi Pończoszanka","warkocze","Szwecja","koń"],["Tyrion Lannister","Gra o tron","karzeł","Cersei"],["Rick Sanchez","Morty","naukowiec","wnuk"]]
+ }
+};
 const LVL = {easy:"Łatwy",medium:"Średni",hard:"Trudny"};
 
-const DEF = {mode:"time",time:60,count:10,cats:[],hintEnd:false,hintWord:false,hintSec:30,hintEndSec:30,lvl:"mixed",swap:false,sound:true};
+const DEF = {mode:"time",time:60,count:10,game:"p",tcats:[],cats:[],hintEnd:false,hintWord:false,hintSec:30,hintEndSec:30,lvl:"mixed",swap:false,sound:true};
 const OPTS = [
  {k:"mode",l:"Tryb",o:[["time","Na czas"],["count","Na liczbę haseł"],["endless","Bez końca"]]},
  {k:"time",l:"Czas rundy",o:[[30,"30 s"],[60,"60 s"],[90,"90 s"],[120,"2 min"]],show:s=>s.mode==="time"},
  {k:"count",l:"Liczba haseł",o:[[5,"5"],[10,"10"],[15,"15"],[20,"20"]],show:s=>s.mode==="count"},
- {k:"hintEnd",l:"Podpowiedź na końcu rundy",hint:"Gdy do końca rundy zostanie mniej niż wybrany czas, pod hasłem pojawią się dwa słowa na P, które pomagają je zgadnąć.",show:s=>s.mode==="time",o:[[false,"wył."],[true,"wł."]]},
- {k:"hintEndSec",l:"Podpowiedź na ile sekund przed końcem",select:true,show:s=>s.mode==="time"&&s.hintEnd,o:[30,40,50,60,70,80,90,100,110,120].map(n=>[n,n<60?n+" s":(n%60?Math.floor(n/60)+" min "+n%60+" s":(n/60)+" min")])},
- {k:"hintWord",l:"Podpowiedź po czasie na haśle",hint:"Gdy to samo hasło wisi na ekranie dłużej niż wybrany czas, pod nim pojawią się dwa słowa na P.",show:s=>s.mode!=="time",o:[[false,"wył."],[true,"wł."]]},
- {k:"hintSec",l:"Podpowiedź po (sekundach na haśle)",select:true,show:s=>s.mode!=="time"&&s.hintWord,o:[30,40,50,60,70,80,90,100,110,120].map(n=>[n,n<60?n+" s":(n%60?Math.floor(n/60)+" min "+n%60+" s":(n/60)+" min")])},
- {k:"cats",l:"Kategorie",multi:true,hint:"Możesz wybrać kilka naraz. „Wszystkie” = bez ograniczeń.",o:Object.keys(WORDS).map(c=>[c,c])},
+ {g:["p"],k:"hintEnd",l:"Podpowiedź na końcu rundy",hint:"Gdy do końca rundy zostanie mniej niż wybrany czas, pod hasłem pojawią się dwa słowa na P, które pomagają je zgadnąć.",show:s=>s.mode==="time",o:[[false,"wył."],[true,"wł."]]},
+ {g:["p"],k:"hintEndSec",l:"Podpowiedź na ile sekund przed końcem",select:true,show:s=>s.mode==="time"&&s.hintEnd,o:[30,40,50,60,70,80,90,100,110,120].map(n=>[n,n<60?n+" s":(n%60?Math.floor(n/60)+" min "+n%60+" s":(n/60)+" min")])},
+ {g:["p"],k:"hintWord",l:"Podpowiedź po czasie na haśle",hint:"Gdy to samo hasło wisi na ekranie dłużej niż wybrany czas, pod nim pojawią się dwa słowa na P.",show:s=>s.mode!=="time",o:[[false,"wył."],[true,"wł."]]},
+ {g:["p"],k:"hintSec",l:"Podpowiedź po (sekundach na haśle)",select:true,show:s=>s.mode!=="time"&&s.hintWord,o:[30,40,50,60,70,80,90,100,110,120].map(n=>[n,n<60?n+" s":(n%60?Math.floor(n/60)+" min "+n%60+" s":(n/60)+" min")])},
+ {g:["p"],k:"cats",l:"Kategorie",multi:true,hint:"Możesz wybrać kilka naraz. „Wszystkie” = bez ograniczeń.",o:Object.keys(WORDS).map(c=>[c,c])},
+ {g:["tabu"],k:"tcats",l:"Kategorie postaci",multi:true,hint:"Możesz wybrać kilka naraz. „Wszystkie” = bez ograniczeń.",o:Object.keys(TABU).map(c=>[c,c])},
  {k:"lvl",l:"Poziom trudności",o:[["easy","Łatwy"],["medium","Średni"],["hard","Trudny"],["mixed","Mieszany"]]},
- {k:"swap",adv:true,l:"Zamień strony",hint:"Domyślnie zgadujący stuka PRAWĄ ręką, gdy zgadł (to lewa połowa ekranu, bo telefon jest do niego odwrócony), a LEWĄ, gdy pasuje. Włącz to, jeśli zgadującemu wygodniej odwrotnie: prawa ręka = pas, lewa = zgadnięte.",o:[[false,"wył."],[true,"wł."]]},
+ {k:"swap",adv:true,l:"Zamień strony",hint:s=>s.game==="tabu"?"Domyślnie lewa połowa ekranu to „zgadnięte”, a prawa to „pas”. Włącz, jeśli wolisz odwrotnie.":"Domyślnie zgadujący stuka PRAWĄ ręką, gdy zgadł (to lewa połowa ekranu, bo telefon jest do niego odwrócony), a LEWĄ, gdy pasuje. Włącz to, jeśli zgadującemu wygodniej odwrotnie: prawa ręka = pas, lewa = zgadnięte.",o:[[false,"wył."],[true,"wł."]]},
  {k:"sound",adv:true,l:"Dźwięki",o:[[true,"wł."],[false,"wył."]]}
 ];
 
@@ -1519,13 +1547,25 @@ let S = Object.assign({},DEF,lsGet("pnp_settings",{}));
 {const old=lsGet("pnp_settings",{});
  if(old.hints!==undefined&&old.hintEnd===undefined){S.hintEnd=old.hints===true;S.hintWord=old.hints==="word"}delete S.hints;if(typeof old.cat==="string"&&!old.cats)S.cats=old.cat==="Wszystkie"?[]:[old.cat];}
 S.cats=Array.isArray(S.cats)?S.cats.filter(c=>WORDS[c]):[];
-if(!OPTS.every(o=>o.multi||o.o.some(x=>x[0]===S[o.k]))){const c=S.cats;S=Object.assign({},DEF);S.cats=c}
+S.tcats=Array.isArray(S.tcats)?S.tcats.filter(c=>TABU[c]):[];
+if(S.game!=="tabu")S.game="p";
+if(!OPTS.every(o=>o.multi||o.o.some(x=>x[0]===S[o.k]))){const k={cats:S.cats,tcats:S.tcats,game:S.game};S=Object.assign({},DEF,k)}
 
 function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("on",s.id===id))}
 
 /* pula */
 function pool(){
  const p=[];
+ if(S.game==="tabu"){
+  for(const c in TABU){
+   if(S.tcats.length&&!S.tcats.includes(c))continue;
+   for(const l in TABU[c]){
+    if(S.lvl!=="mixed"&&S.lvl!==l)continue;
+    for(const e of TABU[c][l])p.push({w:e[0],c,l,f:e.slice(1)});
+   }
+  }
+  return p;
+ }
  for(const c in WORDS){
   if(S.cats.length&&!S.cats.includes(c))continue;
   for(const l in WORDS[c]){
@@ -1538,19 +1578,28 @@ function pool(){
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 
 /* ustawienia UI */
-const SEC_OF={mode:"game",time:"game",count:"game",cats:"words",lvl:"words",hintEnd:"hints",hintWord:"hints",hintSec:"hints",hintEndSec:"hints",swap:"adv",sound:"adv"};
+const SEC_OF={mode:"game",time:"game",count:"game",cats:"words",lvl:"words",hintEnd:"hints",hintWord:"hints",hintSec:"hints",hintEndSec:"hints",tcats:"words",swap:"adv",sound:"adv"};
 const LVL_L={easy:"łatwy",medium:"średni",hard:"trudny",mixed:"mieszany"};
 const SECS=[
  {id:"game",t:"Tryb gry",sum:s=>({time:"Na czas · "+(s.time>=120?"2 min":s.time+" s"),count:"Na liczbę haseł · "+s.count,endless:"Bez końca"})[s.mode]},
- {id:"words",t:"Hasła",sum:s=>(s.cats.length===0?"wszystkie kategorie":s.cats.length===1?s.cats[0]:s.cats.length+" kategorie")+" · "+LVL_L[s.lvl]},
+ {id:"words",t:"Hasła",sum:s=>{const c=s.game==="tabu"?s.tcats:s.cats;return (c.length===0?"wszystkie kategorie":c.length===1?c[0]:c.length+" kategorie")+" · "+LVL_L[s.lvl]}},
  {id:"hints",t:"Podpowiedzi na P",sum:s=>s.mode==="time"?(s.hintEnd?"ostatnie "+s.hintEndSec+" s":"wył."):(s.hintWord?"po "+s.hintSec+" s na haśle":"wył.")},
  {id:"adv",t:"Zaawansowane",sum:s=>"strony "+(s.swap?"zamienione":"domyślne")+" · dźwięk "+(s.sound?"wł.":"wył.")}
 ];
 const secOpen={game:true};
 function renderSettings(){
  const box=$("opts");box.innerHTML="";
+ const gp=document.createElement("div");gp.className="gamepick";
+ for(const [id,t,s] of [["p","Czółko na P","słowa na P"],["tabu","Tabu na postacie","zakazane słowa"]]){
+  const b=document.createElement("button");b.innerHTML="<b>"+t+"</b><small>"+s+"</small>";
+  if(S.game===id)b.className="sel";
+  b.onclick=()=>{S.game=id;lsSet("pnp_settings",S);renderSettings()};
+  gp.appendChild(b);
+ }
+ box.appendChild(gp);
  const bodies={};
  for(const sc of SECS){
+  if(sc.id==="hints"&&S.game==="tabu")continue;
   const d=document.createElement("details");d.className="sec";d.open=!!secOpen[sc.id];
   d.innerHTML='<summary><span class="st">'+sc.t+'</span><span class="ss">'+sc.sum(S)+'</span></summary>';
   d.addEventListener("toggle",()=>{secOpen[sc.id]=d.open});
@@ -1558,10 +1607,11 @@ function renderSettings(){
   bodies[sc.id]=b;box.appendChild(d);
  }
  for(const o of OPTS){
+  if(o.g&&!o.g.includes(S.game))continue;
   if(o.show&&!o.show(S))continue;
   const body=bodies[SEC_OF[o.k]];
   const g=document.createElement("div");g.className="group";
-  g.innerHTML="<label>"+o.l+"</label>"+(o.hint?'<div class="hint">'+o.hint+'</div>':"");
+  g.innerHTML="<label>"+o.l+"</label>"+(o.hint?'<div class="hint">'+(typeof o.hint==="function"?o.hint(S):o.hint)+'</div>':"");
   if(o.select){
    const sel=document.createElement("select");
    for(const [v,t] of o.o){const op=document.createElement("option");op.value=v;op.textContent=t;if(S[o.k]===v)op.selected=true;sel.appendChild(op)}
@@ -1571,15 +1621,15 @@ function renderSettings(){
   const seg=document.createElement("div");seg.className="seg";
   if(o.multi){
    const all=document.createElement("button");all.textContent="Wszystkie";
-   if(!S.cats.length)all.className="sel";
-   all.onclick=()=>{S.cats=[];lsSet("pnp_settings",S);renderSettings()};
+   if(!S[o.k].length)all.className="sel";
+   all.onclick=()=>{S[o.k]=[];lsSet("pnp_settings",S);renderSettings()};
    seg.appendChild(all);
    for(const [v,t] of o.o){
     const b=document.createElement("button");b.textContent=t;
-    if(S.cats.includes(v))b.className="sel";
+    if(S[o.k].includes(v))b.className="sel";
     b.onclick=()=>{
-     S.cats=S.cats.includes(v)?S.cats.filter(x=>x!==v):[...S.cats,v];
-     if(S.cats.length===o.o.length)S.cats=[];
+     S[o.k]=S[o.k].includes(v)?S[o.k].filter(x=>x!==v):[...S[o.k],v];
+     if(S[o.k].length===o.o.length)S[o.k]=[];
      lsSet("pnp_settings",S);renderSettings();
     };
     seg.appendChild(b);
@@ -1594,10 +1644,15 @@ function renderSettings(){
   }
   g.appendChild(seg);body.appendChild(g);
  }
- const okSide=S.swap?"Lewa ręka zgadującego (prawa połowa ekranu)":"Prawa ręka zgadującego (lewa połowa ekranu)";
- const pasSide=S.swap?"Prawa ręka zgadującego (lewa połowa ekranu)":"Lewa ręka zgadującego (prawa połowa ekranu)";
- $("infoOk").textContent=okSide;$("infoPas").textContent=pasSide;
- $("poolInfo").textContent="Haseł w puli: "+pool().length;
+ const lh=S.swap?"prawa":"lewa",rh=S.swap?"lewa":"prawa";
+ const lhand=S.swap?"Lewa ręka zgadującego (prawa połowa ekranu)":"Prawa ręka zgadującego (lewa połowa ekranu)";
+ const phand=S.swap?"Prawa ręka zgadującego (lewa połowa ekranu)":"Lewa ręka zgadującego (prawa połowa ekranu)";
+ $("h1").textContent=S.game==="tabu"?"Tabu na postacie":"Czółko na P";
+ $("sub").textContent=S.game==="tabu"?"Opisz znaną postać bez użycia 3 zakazanych słów.":"Zgadujący trzyma telefon na czole. Reszta podpowiada tylko słowami na P.";
+ $("howto").innerHTML=S.game==="tabu"?
+  "<b>Jak grać:</b> opisujący trzyma telefon i widzi postać oraz 3 zakazane słowa. Opisuje ją <b>dowolnymi słowami</b>, ale nie wolno użyć zakazanych ani imienia i nazwiska. Reszta zgaduje.<br><b>"+lh[0].toUpperCase()+lh.slice(1)+" połowa ekranu</b> (✓) = zgadnięte, <b>"+rh+" połowa</b> (PAS) = pas. Wystarczy stuknięcie.<br><b>Faul</b> (użyte zakazane słowo): reszta krzyczy „faul!”, a opisujący stuka pas. Pas i faul = 0 pkt."
+ :"<b>Jak grać:</b> zgadujący trzyma telefon przy czole ekranem na zewnątrz i stuka na ślepo.<br><b>"+lhand+"</b> = zgadnięte.<br><b>"+phand+"</b> = pas.<br><b>Przytrzymaj</b> palec na wybranej połowie ekranu, aż cała się wypełni kolorem. Puszczenie wcześniej anuluje.<br><b>Faul</b> (słowo nie na P albo samo hasło): reszta krzyczy „faul!”, a zgadujący stuka pas. Pas i faul = 0 pkt.";
+ $("poolInfo").textContent=(S.game==="tabu"?"Postaci w puli: ":"Haseł w puli: ")+pool().length;
 }
 
 /* dźwięk, wibracja */
@@ -1645,6 +1700,7 @@ function leaveImmersive(){
 /* runda */
 let R=null,cdTimer=null;
 function sideTexts(){
+ if(S.game==="tabu")return S.swap?{ok:"Zgadnięte: prawa połowa ekranu",pas:"Pas: lewa połowa ekranu"}:{ok:"Zgadnięte: lewa połowa ekranu",pas:"Pas: prawa połowa ekranu"};
  return S.swap?{ok:"Zgadnięte: lewa ręka (prawa połowa)",pas:"Pas: prawa ręka (lewa połowa)"}
               :{ok:"Zgadnięte: prawa ręka (lewa połowa)",pas:"Pas: lewa ręka (prawa połowa)"};
 }
@@ -1657,6 +1713,7 @@ function startRound(){
  let fresh=p.filter(x=>!used.has(x.w));
  if(!fresh.length){p.forEach(x=>used.delete(x.w));fresh=p}
  R={queue:shuffle(fresh),used,items:[],cur:null,score:0,locked:true,ended:false,end:0,pausedAt:0,lastSec:-1,frozen:new Set(),frozenAt:0,wordAt:0,startAt:0,pausedTotal:0};
+ $("cdMsg").textContent=S.game==="tabu"?"Opisujący: weź telefon i patrz na ekran. Reszta nie podgląda!":"Przyłóż telefon do czoła ekranem na zewnątrz";
  const t=sideTexts();$("cdOk").textContent="✓ "+t.ok;$("cdPas").textContent="PAS "+t.pas;
  show("countdown");
  let n=3;$("cdNum").textContent=n;beep(600,.15);
@@ -1667,11 +1724,13 @@ function startRound(){
  },1000);
 }
 function setupGame(){
+ $("game").classList.toggle("tabu",S.game==="tabu");
  const t=sideTexts();
+ const hs=S.game==="tabu"?"":"<small>przytrzymaj, aż się wypełni</small>";
  const okL=!S.swap;
  $("zL").className="zone "+(okL?"ok":"pas");$("zR").className="zone "+(okL?"pas":"ok");
- $("zL").firstChild.innerHTML=(okL?"✓ ZGADNIĘTE":"PAS")+"<small>przytrzymaj, aż się wypełni</small>";
- $("zR").firstChild.innerHTML=(okL?"PAS":"✓ ZGADNIĘTE")+"<small>przytrzymaj, aż się wypełni</small>";
+ $("zL").firstChild.innerHTML=(okL?"✓ ZGADNIĘTE":"PAS")+hs;
+ $("zR").firstChild.innerHTML=(okL?"PAS":"✓ ZGADNIĘTE")+hs;
  $("zL").firstChild.style.color=okL?"#6dffa0":"#ff8a8a";
  $("zR").firstChild.style.color=okL?"#ff8a8a":"#6dffa0";
 }
@@ -1689,7 +1748,13 @@ function nextWord(){
  if(!R.queue.length){finish();return}
  R.cur=R.queue.shift();R.wordAt=Date.now();
  R.used.add(R.cur.w);lsSet("pnp_used",[...R.used]);
- $("meta").textContent=(S.cats.length!==1?R.cur.c+" · ":"")+LVL[R.cur.l];
+ const cc=S.game==="tabu"?S.tcats:S.cats;
+ $("meta").textContent=(cc.length!==1?R.cur.c+" · ":"")+LVL[R.cur.l];
+ const tb=$("tabuBox");tb.innerHTML="";
+ if(S.game==="tabu"){
+  for(const w of R.cur.f){const d=document.createElement("div");d.className="tb";d.textContent="⛔ "+w;tb.appendChild(d)}
+  const n=document.createElement("div");n.className="tn";n.textContent="Nie wolno też użyć imienia i nazwiska";tb.appendChild(n);
+ }
  $("word").textContent=R.cur.w;
  $("wordBox").style.visibility="visible";
  fit();
@@ -1698,6 +1763,7 @@ function nextWord(){
 }
 function showHint(){
  const el=$("hintBox");
+ if(S.game==="tabu"){el.textContent="";return}
  let ok=false;
  if(R&&R.cur&&!R.pausedAt){
   ok=S.mode==="time"?(S.hintEnd&&R.end-Date.now()<=S.hintEndSec*1000):(S.hintWord&&Date.now()-R.wordAt>=S.hintSec*1000);
@@ -1709,7 +1775,7 @@ function fit(){
  const el=$("word"),box=$("wordBox");
  const cs=getComputedStyle(box);
  const avail=box.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom);
- const others=$("meta").offsetHeight+$("reminder").offsetHeight+$("hintBox").offsetHeight+24;
+ const others=$("meta").offsetHeight+$("reminder").offsetHeight+$("hintBox").offsetHeight+$("tabuBox").offsetHeight+24;
  const maxH=Math.max(30,avail-others);
  const maxW=box.clientWidth*0.86;
  let fs=Math.min(window.innerHeight*0.26,window.innerWidth*0.18);
@@ -1764,7 +1830,8 @@ function answer(ok){
  $("score").textContent="✓ "+R.score;
  const done=(S.mode==="count"&&R.items.length>=S.count)||!R.queue.length;
  const cls=ok?"ok":"pas";
- if(done){R.flashT=setTimeout(()=>{R.flashT=null;finish()},900);return}
+ if(done){R.flashT=setTimeout(()=>{R.flashT=null;finish()},S.game==="tabu"?500:900);return}
+ if(S.game==="tabu"){R.flashT=setTimeout(()=>{R.flashT=null;f.className="";f.innerHTML="";R.locked=false;nextWord()},450);return}
  freeze("wait");
  let n=3;
  const draw=()=>{f.innerHTML='<div class="fs">'+(ok?"✓":"PAS")+'</div><div class="fc">'+n+'</div><div class="fm">Czas stoi. Następne hasło za chwilę</div>'};
@@ -1787,6 +1854,7 @@ let hold=null;
 function fillEl(side){return $(side==="L"?"zL":"zR").querySelector(".fill")}
 function holdStart(side,e){
  if(hold||!R||R.locked||R.ended||R.pausedAt||!R.cur)return;
+ if(S.game==="tabu"){onZone(side);return}
  const f=fillEl(side);
  f.className="fill";f.style.transition="none";void f.offsetWidth;
  f.style.transition="transform "+HOLD+"ms linear";
