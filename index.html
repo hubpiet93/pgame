@@ -131,7 +131,7 @@ h1{margin:6px 0 2px;font-size:28px}
   <details class="info" id="installHint" style="display:none"><summary><b>Pełny ekran bez paska adresu</b></summary><div style="margin-top:8px">W przeglądarce telefonu otwórz menu <b>Udostępnij</b> (iPhone) lub <b>⋮</b> (Android) → <b>Do ekranu początkowego</b>, a potem uruchamiaj grę z ikony „Czółko na P”. Z samej przeglądarki iPhone nie pozwala ukryć paska.</div></details>
   <div id="opts"></div>
   <div class="info" id="howto"></div>
-  <div style="text-align:center;color:#556;font-size:12px;margin:14px 0 6px">wersja 2026-11-07 · tabu 1</div>
+  <div style="text-align:center;color:#556;font-size:12px;margin:14px 0 6px">wersja 2026-11-07 · tabu 2</div>
   <div id="playBar"><div id="poolInfo"></div><button id="play">Graj</button></div>
  </div>
 </div>
@@ -1650,7 +1650,7 @@ function renderSettings(){
  $("h1").textContent=S.game==="tabu"?"Tabu na postacie":"Czółko na P";
  $("sub").textContent=S.game==="tabu"?"Opisz znaną postać bez użycia 3 zakazanych słów.":"Zgadujący trzyma telefon na czole. Reszta podpowiada tylko słowami na P.";
  $("howto").innerHTML=S.game==="tabu"?
-  "<b>Jak grać:</b> opisujący trzyma telefon i widzi postać oraz 3 zakazane słowa. Opisuje ją <b>dowolnymi słowami</b>, ale nie wolno użyć zakazanych ani imienia i nazwiska. Reszta zgaduje.<br><b>"+lh[0].toUpperCase()+lh.slice(1)+" połowa ekranu</b> (✓) = zgadnięte, <b>"+rh+" połowa</b> (PAS) = pas. Wystarczy stuknięcie.<br><b>Faul</b> (użyte zakazane słowo): reszta krzyczy „faul!”, a opisujący stuka pas. Pas i faul = 0 pkt."
+  "<b>Jak grać:</b> opisujący trzyma telefon i widzi postać oraz 3 zakazane słowa. Opisuje ją <b>dowolnymi słowami</b>, ale nie wolno użyć zakazanych ani imienia i nazwiska. Reszta zgaduje.<br><b>"+lh[0].toUpperCase()+lh.slice(1)+" połowa ekranu</b> (✓) = zgadnięte, <b>"+rh+" połowa</b> (PAS) = pas. <b>Przytrzymaj</b> palec na wybranej połowie, aż cała się wypełni kolorem. Puszczenie wcześniej anuluje.<br><b>Faul</b> (użyte zakazane słowo): reszta krzyczy „faul!”, a opisujący stuka pas. Pas i faul = 0 pkt."
  :"<b>Jak grać:</b> zgadujący trzyma telefon przy czole ekranem na zewnątrz i stuka na ślepo.<br><b>"+lhand+"</b> = zgadnięte.<br><b>"+phand+"</b> = pas.<br><b>Przytrzymaj</b> palec na wybranej połowie ekranu, aż cała się wypełni kolorem. Puszczenie wcześniej anuluje.<br><b>Faul</b> (słowo nie na P albo samo hasło): reszta krzyczy „faul!”, a zgadujący stuka pas. Pas i faul = 0 pkt.";
  $("poolInfo").textContent=(S.game==="tabu"?"Postaci w puli: ":"Haseł w puli: ")+pool().length;
 }
@@ -1726,7 +1726,7 @@ function startRound(){
 function setupGame(){
  $("game").classList.toggle("tabu",S.game==="tabu");
  const t=sideTexts();
- const hs=S.game==="tabu"?"":"<small>przytrzymaj, aż się wypełni</small>";
+ const hs="<small>przytrzymaj, aż się wypełni</small>";
  const okL=!S.swap;
  $("zL").className="zone "+(okL?"ok":"pas");$("zR").className="zone "+(okL?"pas":"ok");
  $("zL").firstChild.innerHTML=(okL?"✓ ZGADNIĘTE":"PAS")+hs;
@@ -1854,7 +1854,6 @@ let hold=null;
 function fillEl(side){return $(side==="L"?"zL":"zR").querySelector(".fill")}
 function holdStart(side,e){
  if(hold||!R||R.locked||R.ended||R.pausedAt||!R.cur)return;
- if(S.game==="tabu"){onZone(side);return}
  const f=fillEl(side);
  f.className="fill";f.style.transition="none";void f.offsetWidth;
  f.style.transition="transform "+HOLD+"ms linear";
